@@ -4,6 +4,15 @@ import (
 	"github.com/disintegration/imaging"
 	"strings"
 	"io"
+	"image"
+	"image/jpeg"
+	"image/png"
+	"image/gif"
+	"golang.org/x/image/bmp"
+	"errors"
+	"log"
+	"net/http"
+"github.com/chai2010/webp"
 )
 
 func stringToAnchor(instr  string) imaging.Anchor {
@@ -94,3 +103,56 @@ type cache interface {
 
 
 
+func encode(w http.ResponseWriter, img image.Image, format string,quality int) error {
+	log.Println(format,quality)
+	var err error
+	switch format {
+	case "jpeg":
+		var rgba *image.RGBA
+		if nrgba, ok := img.(*image.NRGBA); ok {
+			if nrgba.Opaque() {
+				rgba = &image.RGBA{
+					Pix:    nrgba.Pix,
+					Stride: nrgba.Stride,
+					Rect:   nrgba.Rect,
+				}
+			}
+		}
+		if  quality < 1 || 100 < quality {
+			quality = 70
+		}
+
+
+
+		w.Header().Add("content-type","image/jpeg")
+		if rgba != nil {
+			err = jpeg.Encode(w, rgba, &jpeg.Options{Quality: quality})
+		} else {
+			err = jpeg.Encode(w, img, &jpeg.Options{Quality: quality})
+		}
+
+	case "png":
+		w.Header().Add("content-type","image/png")
+		err = png.Encode(w, img)
+	case "gif":
+		w.Header().Add("content-type","image/gif")
+		if quality < 1 || 256 < quality {
+			quality = 256
+		}
+		err = gif.Encode(w, img, &gif.Options{NumColors: quality})
+	case "bmp":
+		w.Header().Add("content-type","image/bmp")
+		err = bmp.Encode(w, img)
+	case "webp":
+		w.Header().Add("content-type","image/webp")
+		if quality < 1 || 100 < quality {
+			quality = 80
+		}
+		if err = webp.Encode(w, img, &webp.Options{Lossless: false,Quality:float32(quality)}); err != nil {
+			log.Println(err)
+		}
+	default:
+		err = errors.New("format not supported")
+	}
+	return err
+}

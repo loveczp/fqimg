@@ -49,7 +49,7 @@ const uploadhtml =
     </head>
     <h1>Welcome to go_image_server world!</h1>
     <p>Upload image(s) to go_image_server:</p>
-    <form enctype="multipart/form-data" action="upload" method=post target=_blank id="upform">
+    <form enctype="multipart/form-data" action="uploadm" method=post target=_blank id="upform">
         Choose file:<input name="userfile" type="file">
         <input type="button" value="+" onclick="changetext()" id="bt_addfile">
         </br>
@@ -65,7 +65,7 @@ func uploadMultiHandler(res http.ResponseWriter, req *http.Request)  {
 	}
 
 	files:=req.MultipartForm.File["userfile"]
-	var l []string
+	var md5List []string
 	for i, _ := range files {
 		tfile,err:=files[i].Open();
 		Buf, err := ioutil.ReadAll(tfile)
@@ -79,7 +79,8 @@ func uploadMultiHandler(res http.ResponseWriter, req *http.Request)  {
 		tfile.Close();
 
 
-		l[i]=(md5value);
+		//l[i]=(md5value);
+		md5List=append(md5List,md5value);
 		//log.Println(l.Len())
 
 		fw2, err := files[i].Open();
@@ -105,10 +106,17 @@ func uploadMultiHandler(res http.ResponseWriter, req *http.Request)  {
 		}
 	}
 
-	restring, _ := json.Marshal(l);
+
+
+	restring, _ := json.Marshal(md5List);
+	//log.Println(md5List.Len())
 	io.WriteString(res, string(restring))
 }
 
+type reValue struct{
+	key string
+	msg string;
+}
 
 func uploadBinHandler(res http.ResponseWriter, req *http.Request) {
 	if req.Method =="GET" {

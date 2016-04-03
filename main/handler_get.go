@@ -11,39 +11,54 @@ import (
 	"container/list"
 	"log"
 	"errors"
+	"time"
 )
 
 func getHandler(resp http.ResponseWriter, req *http.Request) {
+	start := time.Now()
+	log.Println(headers);
+	if headers!=nil && len(headers) >0  {
+		for key , value :=range headers{
+			resp.Header().Add(key,value)
+		}
+	}
 
-	headers := make(map[string]string)
-	headers["test"] = "test"
+
 
 	md5string := strings.Replace(req.URL.Path[1:], "/", "", 100)
+
 	//logrus.Println("request come:", md5string)
-	allcommands := map[string]string{"original":"", "fit":"", "fill":"", "resize":"", "gamma":"", "sigmoid":"", "contrast":"", "brightness":"", "invert":"", "grayscale":"", "blur":"", "sharpen":"", "rotate90":"", "rotate180":"", "flipH":"", "flipV":"", "transpose":"", "transverse":""}
+	allcommands := map[string]string{"original":"", "fit":"", "fill":"", "resize":"", "gamma":"", "sigmoid":"", "contrast":"", "brightness":"", "invert":"", "grayscale":"", "blur":"", "sharpen":"", "rotate90":"", "rotate180":"", "flipH":"", "flipV":"", "transpose":"", "jpeg":"","png":"","gif":"","bmp":"","webp":""}
 
 	//md5file := "./upload/" + md5string;
 
 	var outImage image.Image
-	if reader, err := store.storageGet(md5string); err == nil {
-		outImage, err = imaging.Decode(reader)
-		if err != nil {
-			log.Println("image docode error:" + err.Error());
-			io.WriteString(resp, "image docode error:" + err.Error())
-			return
-		}else {
-			//log.Println("outImage docoded:");
-		}
-	}else {
+	reader, err := store.storageGet(md5string);
+	if  err != nil {
 		jsonstr, _ := json.Marshal(map[string]string{"error": "the image you reqeust does not exist:" + err.Error(), "original":md5string})
 		log.Println(string(jsonstr));
 		io.WriteString(resp, string(jsonstr))
 		return
 	}
+	outImage, err = imaging.Decode(reader)
 
+	if err != nil {
+		log.Println("image docode error:" + err.Error());
+		io.WriteString(resp, "image docode error:" + err.Error())
+		return
+	}
+
+
+
+	//if no action presented , add default action
+	query :=req.URL.RawQuery;
+	if len(query)==0 && len(defaultAction) >2{
+		query = defaultAction;
+	}
+
+	//build  commands
 	ops := list.New()
-	//res.WriteHeader()
-	opts := strings.Split(req.URL.RawQuery, "|")
+	opts := strings.Split(query, "|")
 	for i := 0; i < len(opts); i++ {
 		paraString := strings.TrimSpace(opts[i])
 
@@ -168,8 +183,6 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 			}else{
 				outImage = imaging.Blur(outImage, value)
 			}
-
-
 		}
 		case "sharpen":{
 			if value ,err:=checkStrength(v,3.5); err!=nil{
@@ -207,14 +220,37 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	//imaging.Encode(res, outImage, imaging.JPEG)
+
+	formats:=map[string]string{"jpeg":"","png":"","gif":"","bmp":"","webp":""}
+
+	var quality int;
+	var command string;
+	var ok bool = false
+	for e := ops.Front(); e != nil; e = e.Next() {
+		v, _ := e.Value.(map[string]string)
+		quality, err = strconv.Atoi(v["q"])
+		command,ok = v["c"]
+		_,tok:=formats[command]
+
+		if ok && tok{
+			break
+		}else {
+			command="jpeg"
+		}
+	}
+	log.Println(outImage.Bounds().String())
+
 	if (outImage == nil) {
 		io.WriteString(resp, "outimage is null")
 	}else {
-		imaging.Encode(resp, outImage, imaging.JPEG)
+		encode(resp,outImage,command,quality);
 	}
+
+	elapsed := time.Since(start)
+	log.Println("	|	",elapsed,"	|	",req.RemoteAddr,"	|	",req.URL.Path)
 	return
 }
+
 
 
 func checkResizeParameter(para map[string]string) error {

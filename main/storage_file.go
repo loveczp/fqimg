@@ -82,8 +82,3 @@ func initFile(config *ini.File) FileStore {
 	os.MkdirAll(dir, 0777);
 	return FileStore{dir: dir}
 }
-
-
-
-
-
