@@ -64,7 +64,7 @@ http://45.78.62.199:12345/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300
 
 命令之间可以通过管道链接符号“|”把多个命令连接起来实现多重操作。
 例如
-http://45.78.62.199:12345/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale
+[http://45.78.62.199:12345/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale](http://45.78.62.199:12345/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale "pipeline")
 上面表示先推图像进行fit压缩操作，然后对操作后的结果进行灰度化 处理。
 
 
