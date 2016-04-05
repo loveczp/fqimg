@@ -20,12 +20,12 @@ http://45.78.62.199:12345/2830dfa89daaf37b13c3421b7807df27?c=fill&w=400&h=400
 
 链式处理的例子
 可以把图片裁剪成400*400后，还可以进行灰度处理。如下
-http://45.78.62.199:12345/2830dfa89daaf37b13c3421b7807df27?c=fill&w=400&h=400|c=grayscale
+[http://45.78.62.199:12345/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale](http://45.78.62.199:12345/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale "pipeline")
 
 
 webp处理的例子
 可以把图片裁剪成400*400后，还可以进行灰度处理。如下
-http://45.78.62.199:12345/2830dfa89daaf37b13c3421b7807df27?c=webp
+http://45.78.62.199:12345/2830dfa89daaf37b13c3421b7807df27?c=webp&q=50
 
 
 
