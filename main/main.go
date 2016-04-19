@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"os"
+	"flag"
 )
 
 func main() {
@@ -34,14 +35,22 @@ var logDir string
 var logfile string
 
 
+
+var configPath string
+
 func init() {
-	cfg, _ := ini.Load("./config.conf")
+	flag.StringVar(&configPath,"c","./config.conf", "config file path")
+	cfg, err := ini.Load(configPath)
+	if err!= nil{
+		cfg = ini.Empty()
+	}
 	storage_type = cfg.Section("").Key("storage_type").MustString("file")
+
 	port = cfg.Section("").Key("port").MustInt(12345)
 	favicoPath = cfg.Section("").Key("faviconIcoPath").MustString("./favicon.ico")
 	defaultAction= cfg.Section("").Key("defaultAction").MustString("")
 	headerString:= cfg.Section("").Key("headers").MustString("")
-	logDir = cfg.Section("").Key("logDir").MustString("")
+	logDir = cfg.Section("").Key("logDir").MustString("/var/go_image_server")
 
 	//header
 	if len(headerString)>2{
