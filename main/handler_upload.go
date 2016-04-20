@@ -18,7 +18,7 @@ func helloHandle(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleFav(w http.ResponseWriter, r *http.Request)  {
-	if ffile ,err :=os.Open(favicoPath); err==nil{
+	if ffile ,err :=os.Open(favicon_path); err==nil{
 		io.Copy(w,ffile);
 	}
 	return ;

@@ -10,9 +10,9 @@ import (
 	"image/gif"
 	"golang.org/x/image/bmp"
 	"errors"
-	"log"
 	"net/http"
-"github.com/chai2010/webp"
+	"github.com/chai2010/webp"
+	"log"
 )
 
 func stringToAnchor(instr  string) imaging.Anchor {
@@ -104,7 +104,7 @@ type cache interface {
 
 
 func encode(w http.ResponseWriter, img image.Image, format string,quality int) error {
-	log.Println(format,quality)
+	//log.Println(format,quality)
 	var err error
 	switch format {
 	case "jpeg":
@@ -149,7 +149,7 @@ func encode(w http.ResponseWriter, img image.Image, format string,quality int) e
 			quality = 80
 		}
 		if err = webp.Encode(w, img, &webp.Options{Lossless: false,Quality:float32(quality)}); err != nil {
-			log.Println(err)
+			log.Fatalln(err)
 		}
 	default:
 		err = errors.New("format not supported")

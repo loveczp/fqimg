@@ -6,6 +6,7 @@ import (
 	"os"
 	"gopkg.in/ini.v1"
 	"errors"
+	"fmt"
 )
 
 type FileStore struct {
@@ -28,13 +29,13 @@ func (file FileStore ) storagePut(md5 string, src io.Reader) error {
 
 		fw, err := os.Create(fileName)
 		if err != nil {
-			log.Println("failed to create file in file storage:" + fileName + err.Error())
+			log.Fatalln("failed to create file in file storage:" + fileName + err.Error())
 			return err
 		}
 		_, err = io.Copy(fw, src);
 
 		if err != nil {
-			log.Println("failed to copy file to file system:" + fileName, err.Error())
+			log.Fatalln("failed to copy file to file system:" + fileName, err.Error())
 			return err;
 		}
 
@@ -79,6 +80,8 @@ func (file FileStore ) getCompositDirs(md5 string) (CompositDirs, error) {
 
 func initFile(config *ini.File) FileStore {
 	dir := config.Section("").Key("file.dir").MustString("/var/go_image_server")
+	fmt.Printf(sformat,"file.dir:",dir)
+
 	os.MkdirAll(dir, 0777);
 	return FileStore{dir: dir}
 }

@@ -16,7 +16,7 @@ import (
 
 func getHandler(resp http.ResponseWriter, req *http.Request) {
 	start := time.Now()
-	log.Println(headers);
+	//log.Println(headers);
 	if headers!=nil && len(headers) >0  {
 		for key , value :=range headers{
 			resp.Header().Add(key,value)
@@ -52,8 +52,9 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 
 	//if no action presented , add default action
 	query :=req.URL.RawQuery;
-	if len(query)==0 && len(defaultAction) >2{
-		query = defaultAction;
+	if len(query)==0 && len(default_action) >2{
+		query = default_action;
+		//log.Println("defaultAction:"+default_action)
 	}
 
 	//build  commands
@@ -96,6 +97,11 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 		ops.PushBack(paramap)
 	}
 
+	if(ops.Len()==0){
+		imaging.Encode(resp, outImage, imaging.JPEG)
+		return
+	}
+
 	for e := ops.Front(); e != nil; e = e.Next() {
 		v, _ := e.Value.(map[string]string)
 		intw, _ := strconv.Atoi(v["w"])
@@ -103,11 +109,6 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 		filter := v["f"]
 		command := v["c"]
 		switch command {
-
-		case "original":{
-			imaging.Encode(resp, outImage, imaging.JPEG)
-			return
-		}
 
 		//resize
 		case "fit":{
@@ -238,7 +239,7 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 			command="jpeg"
 		}
 	}
-	log.Println(outImage.Bounds().String())
+	//log.Println(outImage.Bounds().String())
 
 	if (outImage == nil) {
 		io.WriteString(resp, "outimage is null")
@@ -247,10 +248,10 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 	}
 
 	elapsed := time.Since(start)
-	log.Println("	|	",elapsed,"	|	",req.RemoteAddr,"	|	",req.URL.Path)
+
+	accessLog.Printf("%-10s  %-20s %-50s",elapsed,req.RemoteAddr,req.URL)
 	return
 }
-
 
 
 func checkResizeParameter(para map[string]string) error {
