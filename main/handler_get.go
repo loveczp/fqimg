@@ -28,7 +28,7 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 	md5string := strings.Replace(req.URL.Path[1:], "/", "", 100)
 
 	//logrus.Println("request come:", md5string)
-	allcommands := map[string]string{"ori":"", "fit":"", "fill":"", "resize":"", "gamma":"", "sigmoid":"", "contrast":"", "brightness":"", "invert":"", "grayscale":"", "blur":"", "sharpen":"", "rotate90":"", "rotate180":"", "flipH":"", "flipV":"", "transpose":"", "jpeg":"","png":"","gif":"","bmp":"","webp":""}
+	allcommands := map[string]string{"ori":"", "fit":"", "fill":"", "resize":"", "gamma":"", "sigmoid":"", "contrast":"", "brightness":"", "invert":"", "grayscale":"", "blur":"", "sharpen":"", "rotate90":"", "rotate180":"", "rotate270":"", "flipH":"", "flipV":"", "transpose":"", "jpeg":"","png":"","gif":"","bmp":"","webp":""}
 
 	//md5file := "./upload/" + md5string;
 
@@ -139,12 +139,12 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 
 		//adjust
 		case "gamma":{
+			log.Println(v)
 			if value ,err:=checkStrength(v,0.7); err!=nil{
-				outImage = imaging.AdjustGamma(outImage, value)
-			}else{
 				io.WriteString(resp, "gamma strength para error:"+err.Error())
 				return
-
+			}else{
+				outImage = imaging.AdjustGamma(outImage, value)
 			}
 		}
 		case "sigmoid":{
