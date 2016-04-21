@@ -19,10 +19,10 @@ func main() {
 	http.HandleFunc("/hello", helloHandle)
 	err := http.ListenAndServe(":" + strconv.Itoa(port), nil)
 	if err != nil {
-		fmt.Printf("server start failed :", err)
+		log.Panic("server start failed :", err)
 		return
 	} else {
-		fmt.Printf("server start at port: " + strconv.Itoa(port))
+		log.Printf("server start at port: " + strconv.Itoa(port))
 	}
 }
 

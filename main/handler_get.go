@@ -28,7 +28,7 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 	md5string := strings.Replace(req.URL.Path[1:], "/", "", 100)
 
 	//logrus.Println("request come:", md5string)
-	allcommands := map[string]string{"original":"", "fit":"", "fill":"", "resize":"", "gamma":"", "sigmoid":"", "contrast":"", "brightness":"", "invert":"", "grayscale":"", "blur":"", "sharpen":"", "rotate90":"", "rotate180":"", "flipH":"", "flipV":"", "transpose":"", "jpeg":"","png":"","gif":"","bmp":"","webp":""}
+	allcommands := map[string]string{"ori":"", "fit":"", "fill":"", "resize":"", "gamma":"", "sigmoid":"", "contrast":"", "brightness":"", "invert":"", "grayscale":"", "blur":"", "sharpen":"", "rotate90":"", "rotate180":"", "flipH":"", "flipV":"", "transpose":"", "jpeg":"","png":"","gif":"","bmp":"","webp":""}
 
 	//md5file := "./upload/" + md5string;
 
@@ -111,6 +111,9 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 		switch command {
 
 		//resize
+		case "ori":{
+			imaging.Encode(resp, outImage, imaging.JPEG)
+		}
 		case "fit":{
 			if error := checkResizeParameter(v); error != nil {
 				io.WriteString(resp, error.Error())
