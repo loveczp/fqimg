@@ -40,7 +40,8 @@ http://45.78.62.199:12345/2830dfa89daaf37b13c3421b7807df27?c=webp&q=50
 
 ###文档。
 ##1.安装及运行
-下载对应版本的可执行文件：windows64，linux64
+下载对应版本的可执行文件：
+[windows64，linux64]('http://pan.baidu.com/s/1hr7VYle')
 直接执行即可
 
 
