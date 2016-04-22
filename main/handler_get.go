@@ -139,7 +139,6 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 
 		//adjust
 		case "gamma":{
-			log.Println(v)
 			if value ,err:=checkStrength(v,0.7); err!=nil{
 				io.WriteString(resp, "gamma strength para error:"+err.Error())
 				return
