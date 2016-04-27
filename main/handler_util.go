@@ -90,8 +90,8 @@ func byte2string(in [16]byte) []byte {
 
 
 type storage interface {
-	storagePut(md5 string, src io.Reader) error
-	storageGet(md5 string)  (io.Reader,error)
+	storagePut(src io.Reader) (string,error)
+	storageGet(key string)  (io.Reader,error)
 }
 
 

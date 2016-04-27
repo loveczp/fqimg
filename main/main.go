@@ -17,6 +17,8 @@ func main() {
 	http.HandleFunc("/favicon.ico", handleFav)
 	http.HandleFunc("/", getHandler)
 	http.HandleFunc("/hello", helloHandle)
+	http.HandleFunc("/test", uploadTestHandler)
+
 	err := http.ListenAndServe(":" + strconv.Itoa(port), nil)
 	if err != nil {
 		log.Panic("server start failed :", err)
@@ -40,7 +42,7 @@ var (
 )
 
 func init() {
-	flag.StringVar(&configPath, "c", "./config.conf", "config file path")
+	flag.StringVar(&configPath, "c", "./config.ini", "config file path")
 	flag.Parse()
 	fmt.Printf(sformat, "configPath:", configPath)
 	cfg, err := ini.Load(configPath)
@@ -91,6 +93,11 @@ func init() {
 
 		if (storage_type == "file") {
 			store = initFile(cfg);
+			fmt.Printf("-------------::::::::::use file as storage ::::::::--------------")
+		}else if(storage_type=="weed"){
+			store,_ = initWeed(cfg)
+			fmt.Printf("-------------::::::::::use weed as storage ::::::::--------------")
+
 		}
 	}
 }

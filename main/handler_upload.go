@@ -4,13 +4,9 @@ import (
 	"io"
 	"os"
 	"net/http"
-	"strconv"
-	"math/rand"
 	"log"
-	"encoding/hex"
-	"crypto/md5"
-	"io/ioutil"
 	"encoding/json"
+	"fmt"
 )
 
 func helloHandle(w http.ResponseWriter, r *http.Request) {
@@ -67,55 +63,16 @@ func uploadMultiHandler(res http.ResponseWriter, req *http.Request)  {
 	files:=req.MultipartForm.File["userfile"]
 	var md5List []string
 	for i, _ := range files {
-		tfile,err:=files[i].Open();
-		Buf, err := ioutil.ReadAll(tfile)
-		if err != nil {
-			log.Println(files[i], err)
-			io.WriteString(res,"failed to read temp file:" + err.Error())
-			return
+		tfile,_:=files[i].Open();
+		key,err:=store.storagePut(tfile)
+		if err!=nil{
+			log.Fatalln("error ocurr when store to file",err)
 		}
-		md5value := hex.EncodeToString(byte2string(md5.Sum(Buf)))
-		log.Println(md5value);
-		tfile.Close();
-
-
-		//l[i]=(md5value);
-		md5List=append(md5List,md5value);
-		//log.Println(l.Len())
-
-		fw2, err := files[i].Open();
-		if err !=nil{
-			log.Println("failed to open saved temp file:" + err.Error())
-			io.WriteString(res,"failed to open saved temp file:" + err.Error())
-			return
-		}
-
-		err=store.storagePut(md5value,fw2)
-		if err !=nil{
-			log.Println("failed to save to the storage system:" + err.Error())
-			io.WriteString(res,"failed to save to the storage system:" + err.Error())
-			return
-		}
-
-
-		err=fw2.Close()
-		if err !=nil{
-			log.Println("failed to close fw2:" + err.Error())
-			io.WriteString(res,"failed to close fw2:" + err.Error())
-			return
-		}
+		md5List=append(md5List,key);
 	}
-
-
-
 	restring, _ := json.Marshal(md5List);
 	//log.Println(md5List.Len())
 	io.WriteString(res, string(restring))
-}
-
-type reValue struct{
-	key string
-	msg string;
 }
 
 func uploadBinHandler(res http.ResponseWriter, req *http.Request) {
@@ -131,54 +88,13 @@ func uploadBinHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	tempfileName := os.TempDir() + "/"+strconv.Itoa(rand.Int())
-	fw, err := os.Create(tempfileName)
-	if err != nil {
-		log.Println("failed to create temp file:" + err.Error())
-		io.WriteString(res,"failed to create temp file:" + err.Error())
-		return
-	}
-
-	_, err = io.Copy(fw, req.Body);
-	if err != nil {
-		log.Println(tempfileName, err.Error())
-		io.WriteString(res,"failed to copy temp file:" + err.Error())
-		return
-	}
-	fw.Close()
-
-
-	Buf, err := ioutil.ReadFile(tempfileName)
-	if err != nil {
-		log.Println(tempfileName, err)
-		io.WriteString(res,"failed to read temp file:" + err.Error())
-		return
-	}
-
-	md5value := hex.EncodeToString(byte2string(md5.Sum(Buf)))
-
-	fw2, err := os.Open(tempfileName)
-	if err !=nil{
-		log.Println("failed to open saved temp file:" + err.Error())
-		io.WriteString(res,"failed to open saved temp file:" + err.Error())
-		return
-	}
-
-	err=store.storagePut(md5value,fw2)
+	key,err:=store.storagePut(req.Body)
 	if err !=nil{
 		log.Println("failed to save to the storage system:" + err.Error())
 		io.WriteString(res,"failed to save to the storage system:" + err.Error())
 		return
 	}
 
-
-	err=fw2.Close()
-	if err !=nil{
-		log.Println("failed to close fw2:" + err.Error())
-		io.WriteString(res,"failed to close fw2:" + err.Error())
-		return
-	}
-	err = os.Remove(tempfileName)
 
 	if err !=nil{
 		log.Println("failed to remove fw2:" + err.Error())
@@ -187,8 +103,18 @@ func uploadBinHandler(res http.ResponseWriter, req *http.Request) {
 	}
 
 	var remap map[string]string
-	remap = map[string]string{"md5": md5value, "msg": "ok"}
+	remap = map[string]string{"key": key, "msg": "ok"}
 	restring, _ := json.Marshal(remap);
 	io.WriteString(res, string(restring))
+}
+
+
+
+func uploadTestHandler(res http.ResponseWriter, req *http.Request) {
+	data,_:=json.Marshal( req.Header)
+	fmt.Println("header:",string(data))
+	fmt.Println("body:",req.Body)
+	io.WriteString(res, "ok")
+	return
 }
 

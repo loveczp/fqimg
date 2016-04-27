@@ -25,7 +25,7 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 
 
 
-	md5string := strings.Replace(req.URL.Path[1:], "/", "", 100)
+	key := strings.Replace(req.URL.Path[1:], "/", "", 100)
 
 	//logrus.Println("request come:", md5string)
 	allcommands := map[string]string{"ori":"", "fit":"", "fill":"", "resize":"", "gamma":"", "sigmoid":"", "contrast":"", "brightness":"", "invert":"", "grayscale":"", "blur":"", "sharpen":"", "rotate90":"", "rotate180":"", "rotate270":"", "flipH":"", "flipV":"", "transpose":"", "jpeg":"","png":"","gif":"","bmp":"","webp":""}
@@ -33,9 +33,9 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 	//md5file := "./upload/" + md5string;
 
 	var outImage image.Image
-	reader, err := store.storageGet(md5string);
+	reader, err := store.storageGet(key);
 	if  err != nil {
-		jsonstr, _ := json.Marshal(map[string]string{"error": "the image you reqeust does not exist:" + err.Error(), "original":md5string})
+		jsonstr, _ := json.Marshal(map[string]string{"error": "the image you reqeust does not exist:" + err.Error(), "original":key})
 		log.Println(string(jsonstr));
 		io.WriteString(resp, string(jsonstr))
 		return

@@ -1,1 +1,1 @@
-go build main.go handler_get.go  handler_upload.go handler_util.go storage_file.go
+go build main.go handler_get.go  handler_upload.go handler_util.go storage_file.go storage_weed.go

@@ -7,43 +7,52 @@ import (
 	"gopkg.in/ini.v1"
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"encoding/hex"
+	"crypto/md5"
 )
 
 type FileStore struct {
 	dir string
 }
 
-func (file FileStore ) storagePut(md5 string, src io.Reader) error {
-	cDirs, err := file.getCompositDirs(md5);
-
+func (file FileStore ) storagePut(src io.Reader) (string,error) {
+	Buf, err := ioutil.ReadAll(src)
 	if err != nil {
-		return err;
+		log.Fatalln("failed to read temp file")
+		return "",err
+	}
+	md5value := hex.EncodeToString(byte2string(md5.Sum(Buf)))
+	log.Println(md5value);
+
+	cDirs, err := file.getCompositDirs(md5value);
+	if err != nil {
+		return "",err
 	}
 
 	finalDir := file.dir + "/" + cDirs.first + "/" + cDirs.second;
 	os.MkdirAll(finalDir, 0777);
 
-	fileName := finalDir + "/" + md5
+	fileName := finalDir + "/" + md5value
 
 	if _, error := os.Stat(fileName); error != nil {
-
 		fw, err := os.Create(fileName)
 		if err != nil {
 			log.Fatalln("failed to create file in file storage:" + fileName + err.Error())
-			return err
+			return "",err
 		}
 		_, err = io.Copy(fw, src);
 
 		if err != nil {
 			log.Fatalln("failed to copy file to file system:" + fileName, err.Error())
-			return err;
+			return "",err;
 		}
 
 		fw.Close()
-		return nil
+		return md5value,nil
 
 	}else {
-		return nil
+		return md5value,nil
 	}
 }
 
