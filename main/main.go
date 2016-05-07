@@ -50,7 +50,7 @@ func init() {
 		fmt.Printf("config file does not exsit, default config will be loaded\n")
 		cfg = ini.Empty()
 	}
-	storage_type = cfg.Section("").Key("storage_type").MustString("file")
+	storage_type = cfg.Section("").Key("storage_type").MustString("")
 	fmt.Printf(sformat, "storage_type:", storage_type)
 
 	port = cfg.Section("").Key("port").MustInt(12345)
@@ -98,6 +98,9 @@ func init() {
 			store,_ = initWeed(cfg)
 			fmt.Printf("-------------::::::::::use weed as storage ::::::::--------------")
 
+		}else if(storage_type=="fastdfs"){
+			store,_ = initFast(cfg)
+			fmt.Printf("-------------::::::::::use fastdfs as storage ::::::::--------------")
 		}
 	}
 }

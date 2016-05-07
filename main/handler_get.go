@@ -25,9 +25,9 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 
 
 
-	key := strings.Replace(req.URL.Path[1:], "/", "", 100)
+	key := req.URL.Path[1:]
 
-	//logrus.Println("request come:", md5string)
+	log.Println("handler_get   key:", key)
 	allcommands := map[string]string{"ori":"", "fit":"", "fill":"", "resize":"", "gamma":"", "sigmoid":"", "contrast":"", "brightness":"", "invert":"", "grayscale":"", "blur":"", "sharpen":"", "rotate90":"", "rotate180":"", "rotate270":"", "flipH":"", "flipV":"", "transpose":"", "jpeg":"","png":"","gif":"","bmp":"","webp":""}
 
 	//md5file := "./upload/" + md5string;
