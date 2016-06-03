@@ -11,8 +11,8 @@ import (
 	"golang.org/x/image/bmp"
 	"errors"
 	"net/http"
-	"github.com/chai2010/webp"
-	"log"
+/*	"github.com/chai2010/webp"
+	"log"*/
 )
 
 func stringToAnchor(instr  string) imaging.Anchor {
@@ -143,14 +143,14 @@ func encode(w http.ResponseWriter, img image.Image, format string,quality int) e
 	case "bmp":
 		w.Header().Add("content-type","image/bmp")
 		err = bmp.Encode(w, img)
-	case "webp":
+/*	case "webp":
 		w.Header().Add("content-type","image/webp")
 		if quality < 1 || 100 < quality {
 			quality = 80
 		}
 		if err = webp.Encode(w, img, &webp.Options{Lossless: false,Quality:float32(quality)}); err != nil {
 			log.Fatalln(err)
-		}
+		}*/
 	default:
 		err = errors.New("format not supported")
 	}

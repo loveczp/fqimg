@@ -2,7 +2,6 @@ package main
 
 import (
 	"io"
-	"gopkg.in/ini.v1"
 	"fmt"
 	"errors"
 	"github.com/weilaihui/fdfs_client"
@@ -74,15 +73,15 @@ func (fast FastStore ) storageGet(key string) (io.Reader, error) {
 }
 
 
-func initFast(config *ini.File) ( FastStore ,error){
-	hasUrl := config.Section("").HasKey("fastdfs.config_file_path")
-	if(hasUrl==false){
+func initFast(config  Config) ( FastStore ,error){
+	//hasUrl := config.Get("fastdfs.config_file_path")
+	if(config.FastdfsConfigFilePath==""){
 		panic("fastdfs.configPath does not exsit!")
 		return FastStore{},errors.New("fastdfs.config_file_path does not exsit!");
 	}
-	fastdfsPath:=config.Section("").Key("fastdfs.config_file_path").MustString("")
-	fmt.Printf(sformat,"fastdfs.config_file_path:",fastdfsPath)
-	c, err := fdfs_client.NewFdfsClient(fastdfsPath)
+	//fastdfsPath:=config.Get("fastdfs.config_file_path").(string)
+	fmt.Printf(sformat,"fastdfs.config_file_path:",config.FastdfsConfigFilePath)
+	c, err := fdfs_client.NewFdfsClient(config.FastdfsConfigFilePath)
 	if err!=nil {
 		panic("server start failed :"+err.Error())
 	}

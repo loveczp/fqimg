@@ -3,12 +3,16 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"gopkg.in/ini.v1"
 	"strconv"
-	"strings"
 	"os"
 	"flag"
 	"log"
+	_ "net/http/pprof"
+	"github.com/BurntSushi/toml"
+	"image"
+	//"encoding/json"
+	//"io"
+	"github.com/disintegration/imaging"
 )
 
 func main() {
@@ -19,87 +23,91 @@ func main() {
 	http.HandleFunc("/hello", helloHandle)
 	http.HandleFunc("/test", uploadTestHandler)
 
-	err := http.ListenAndServe(":" + strconv.Itoa(port), nil)
+	err := http.ListenAndServe(":" + strconv.Itoa(conf.Port), nil)
 	if err != nil {
 		log.Panic("server start failed :", err)
 		return
 	} else {
-		log.Printf("server start at port: " + strconv.Itoa(port))
+		log.Printf("server start at port: " + strconv.Itoa(conf.Port))
 	}
 }
 
-var (
-	store storage
-	storage_type string
-	port int
-	favicon_path string
-	default_action string
-	headers map[string]string
-	log_dir string
-	sformat = "%-20s%-20s\n"
-	configPath string
-	accessLog *log.Logger
-)
+var conf Config
+var configPath string
+var accessLog  *log.Logger
+var store storage
+var sformat = "%-20s%-20s\n"
+
+type Config struct {
+	StorageType           string
+	FileDir               string
+	WeedMasterUrl         string
+	FastdfsConfigFilePath string
+	Port                  int
+	FaviconPath           string
+	DefaultAction         string
+	Headers               map[string]string
+	LogDir                string
+	Markers               map[string]string
+}
+
+var markHash = make(map[string]image.Image)
 
 func init() {
-	flag.StringVar(&configPath, "c", "./config.ini", "config file path")
+	flag.StringVar(&configPath, "c", "./config.conf", "config file path")
 	flag.Parse()
 	fmt.Printf(sformat, "configPath:", configPath)
-	cfg, err := ini.Load(configPath)
-	if err != nil {
-		fmt.Printf("config file does not exsit, default config will be loaded\n")
-		cfg = ini.Empty()
+	if _, err := toml.DecodeFile(configPath, &conf); err != nil {
+		log.Panic("config file decode error.\n", err)
 	}
-	storage_type = cfg.Section("").Key("storage_type").MustString("")
-	fmt.Printf(sformat, "storage_type:", storage_type)
+	fmt.Printf(sformat, "storage_type:", conf.StorageType)
+	fmt.Printf(sformat, "file_dir:", conf.FileDir)
+	fmt.Printf(sformat, "weed_master_url:", conf.WeedMasterUrl)
+	fmt.Printf(sformat, "fastdfs_config_file_path:", conf.FastdfsConfigFilePath)
+	fmt.Printf("%-20s%-20d\n", "port:", conf.Port)
+	fmt.Printf(sformat, "favicon_path:", conf.FaviconPath)
+	fmt.Printf(sformat, "default_action:", conf.DefaultAction)
+	fmt.Printf(sformat, "headers:", conf.Headers)
+	fmt.Printf(sformat, "log_dir:", conf.LogDir)
+	fmt.Printf(sformat, "Markers:", conf.Markers)
 
-	port = cfg.Section("").Key("port").MustInt(12345)
-	fmt.Printf(sformat, "port:", strconv.Itoa(port))
-
-	favicon_path = cfg.Section("").Key("favicon_path").MustString("./favicon.ico")
-	fmt.Printf(sformat, "favicon_path:", favicon_path)
-	default_action = cfg.Section("").Key("default_action").MustString("")
-	fmt.Printf(sformat, "default_action:", default_action)
-	headerString := cfg.Section("").Key("headers").MustString("Cache-Control:max-age=9999999")
-	fmt.Printf(sformat, "headers:", headerString)
-	log_dir = cfg.Section("").Key("log_dir").MustString("/var/go_image_server")
-	fmt.Printf(sformat, "log_dir:", log_dir)
-
-	//header
-	if len(headerString) > 2 {
-		headers = make(map[string]string)
-		harray := strings.Split(headerString, ";")
-		for i := 0; i < len(harray); i++ {
-			itemarray := strings.Split(harray[i], ":")
-			if len(itemarray) == 2 {
-				headers[itemarray[0]] = itemarray[1]
+	if (len(conf.Markers) > 0) {
+		for k, v := range conf.Markers {
+			mreader, error := os.Open(v)
+			if error != nil {
+				log.Panic("open ", v, "error :", error)
 			}
+			outImage, error := imaging.Decode(mreader)
+
+			if error != nil {
+				log.Panic("decode file ", v, "error :", error)
+			}
+			markHash[k] = outImage
 		}
 	}
 
-	if len(log_dir) > 2 {
-		os.MkdirAll(log_dir, 0777);
-		logfile :=log_dir + "/access.log"
+	if len(conf.LogDir) > 2 {
+		os.MkdirAll(conf.LogDir, 0777);
+		logfile := conf.LogDir + "/access.log"
 		if _, err := os.Stat(logfile); os.IsNotExist(err) {
 			_, _ = os.Create(logfile);
 		}
 
-		file, err := os.OpenFile(logfile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		file, err := os.OpenFile(logfile, os.O_CREATE | os.O_WRONLY | os.O_APPEND, 0666)
 		if err != nil {
 			log.Fatalln("Failed to open log file", "output:", err)
 		}
 
-		accessLog = log.New(file,"access: ",		log.Ldate|log.Ltime)
+		accessLog = log.New(file, "access: ", log.Ldate | log.Ltime)
 
-		if (storage_type == "file") {
-			store = initFile(cfg);
+		if (conf.StorageType == "file") {
+			store = initFile(conf);
 			fmt.Printf("-------------::::::::::use file as storage ::::::::--------------")
-		}else if(storage_type=="weed"){
-			store,_ = initWeed(cfg)
+		} else if (conf.StorageType == "weed") {
+			store, _ = initWeed(conf)
 			fmt.Printf("-------------::::::::::use weed as storage ::::::::--------------")
-
-		}else if(storage_type=="fastdfs"){
-			store,_ = initFast(cfg)
+		} else if (conf.StorageType == "fastdfs") {
+			store, _ = initFast(conf)
 			fmt.Printf("-------------::::::::::use fastdfs as storage ::::::::--------------")
 		}
 	}

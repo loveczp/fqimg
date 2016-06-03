@@ -4,51 +4,54 @@ import (
 	"io"
 	"log"
 	"os"
-	"gopkg.in/ini.v1"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"encoding/hex"
 	"crypto/md5"
+	"bytes"
 )
 
 type FileStore struct {
 	dir string
 }
 
-func (file FileStore ) storagePut(src io.Reader) (string,error) {
-	Buf, err := ioutil.ReadAll(src)
+func (fileStorage FileStore ) storagePut(src io.Reader) (string,error) {
+	srcBuffer, err := ioutil.ReadAll(src)
 	if err != nil {
 		log.Fatalln("failed to read temp file")
 		return "",err
 	}
-	md5value := hex.EncodeToString(byte2string(md5.Sum(Buf)))
+	md5value := hex.EncodeToString(byte2string(md5.Sum(srcBuffer)))
 	log.Println(md5value);
 
-	cDirs, err := file.getCompositDirs(md5value);
+	cDirs, err := fileStorage.getCompositDirs(md5value);
 	if err != nil {
 		return "",err
 	}
 
-	finalDir := file.dir + "/" + cDirs.first + "/" + cDirs.second;
+	finalDir := fileStorage.dir + "/" + cDirs.first + "/" + cDirs.second;
 	os.MkdirAll(finalDir, 0777);
 
-	fileName := finalDir + "/" + md5value
+	destFileName := finalDir + "/" + md5value
 
-	if _, error := os.Stat(fileName); error != nil {
-		fw, err := os.Create(fileName)
+	if _, error := os.Stat(destFileName); error != nil {
+		destFileWriter, err := os.Create(destFileName)
 		if err != nil {
-			log.Fatalln("failed to create file in file storage:" + fileName + err.Error())
+			log.Fatalln("failed to create file in file storage:" + destFileName + err.Error())
 			return "",err
 		}
-		_, err = io.Copy(fw, src);
+		bufferReader := bytes.NewReader(srcBuffer)
+		bytenum, err := io.Copy(destFileWriter, bufferReader);
+		log.Println("storage_file copied byte:",bytenum)
+
 
 		if err != nil {
-			log.Fatalln("failed to copy file to file system:" + fileName, err.Error())
+			log.Fatalln("failed to copy file to file system:" + destFileName, err.Error())
 			return "",err;
 		}
 
-		fw.Close()
+		destFileWriter.Close()
 		return md5value,nil
 
 	}else {
@@ -87,10 +90,12 @@ func (file FileStore ) getCompositDirs(md5 string) (CompositDirs, error) {
 	}
 }
 
-func initFile(config *ini.File) FileStore {
-	dir := config.Section("").Key("file.dir").MustString("/var/go_image_server")
-	fmt.Printf(sformat,"file.dir:",dir)
+func initFile(config  Config) FileStore {
+	if(config.FileDir==""){
+		config.FileDir="/var/go_image_server"
+	}
+	fmt.Printf(sformat,"file_dir:",config.FileDir)
 
-	os.MkdirAll(dir, 0777);
-	return FileStore{dir: dir}
+	os.MkdirAll(config.FileDir, 0777);
+	return FileStore{dir: config.FileDir}
 }

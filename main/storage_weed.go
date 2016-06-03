@@ -2,7 +2,6 @@ package main
 
 import (
 	"io"
-	"gopkg.in/ini.v1"
 	"fmt"
 	"log"
 	"net/http"
@@ -176,14 +175,15 @@ func (weed WeedStore ) storageGet(key string) (io.Reader, error) {
 }
 
 
-func initWeed(config *ini.File) ( WeedStore ,error){
-	hasUrl := config.Section("").HasKey("weed.master_url")
-	if(hasUrl==false){
+func initWeed(config  Config) ( WeedStore ,error){
+	//hasUrlGet := config.Get("weed.master_url")
+	if(config.WeedMasterUrl==""){
 		log.Panic("weed.master_url does not exsit!")
+
 		return WeedStore{},errors.New("weed.master_url does not exsit!");
 	}
-	master_url:=config.Section("").Key("weed.master_url").MustString("")
-	fmt.Printf(sformat,"weed.master_url:",master_url)
+	//master_url:=config.Get("weed.master_url").(string)
+	fmt.Printf(sformat,"weed.master_url:",config.WeedMasterUrl)
 
-	return WeedStore{masterUrl: master_url},nil
+	return WeedStore{masterUrl: config.WeedMasterUrl},nil
 }

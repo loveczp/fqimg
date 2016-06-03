@@ -12,29 +12,40 @@ import (
 	"log"
 	"errors"
 	"time"
+	//"image/draw"
+	"github.com/deckarep/golang-set"
+	"image/draw"
+	"image/color"
+)
+
+var (
+	cmdstr = []interface{}{"ori", "fit", "fill", "resize", "gamma", "sigmoid", "contrast",
+		"brightness", "invert", "grayscale", "blur", "sharpen", "rotate90", "rotate180",
+		"rotate270", "flipH", "flipV", "transpose", "jpeg", "png", "gif", "bmp", "webp", "mark"}
+	cmds = mapset.NewSetFromSlice(cmdstr)
+
+	formats = mapset.NewSetFromSlice([]interface{}{"jpeg", "png", "gif", "bmp", "webp"})
+	offps = mapset.NewSetFromSlice([]interface{}{"lu", "ru", "ld", "rd"})
 )
 
 func getHandler(resp http.ResponseWriter, req *http.Request) {
 	start := time.Now()
 	//log.Println(headers);
-	if headers!=nil && len(headers) >0  {
-		for key , value :=range headers{
-			resp.Header().Add(key,value)
+	if conf.Headers != nil && len(conf.Headers) > 0 {
+		for key, value := range conf.Headers {
+			resp.Header().Add(key, value)
 		}
 	}
 
-
-
 	key := req.URL.Path[1:]
 
-	log.Println("handler_get   key:", key)
-	allcommands := map[string]string{"ori":"", "fit":"", "fill":"", "resize":"", "gamma":"", "sigmoid":"", "contrast":"", "brightness":"", "invert":"", "grayscale":"", "blur":"", "sharpen":"", "rotate90":"", "rotate180":"", "rotate270":"", "flipH":"", "flipV":"", "transpose":"", "jpeg":"","png":"","gif":"","bmp":"","webp":""}
+	//log.Println("handler_get   key:", key)
 
 	//md5file := "./upload/" + md5string;
 
 	var outImage image.Image
 	reader, err := store.storageGet(key);
-	if  err != nil {
+	if err != nil {
 		jsonstr, _ := json.Marshal(map[string]string{"error": "the image you reqeust does not exist:" + err.Error(), "original":key})
 		log.Println(string(jsonstr));
 		io.WriteString(resp, string(jsonstr))
@@ -51,9 +62,9 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 
 
 	//if no action presented , add default action
-	query :=req.URL.RawQuery;
-	if len(query)==0 && len(default_action) >2{
-		query = default_action;
+	query := req.URL.RawQuery;
+	if len(query) == 0 && len(conf.DefaultAction) > 2 {
+		query = conf.DefaultAction;
 		//log.Println("defaultAction:"+default_action)
 	}
 
@@ -86,8 +97,8 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 		}
 
 		incom, ok := paramap["c"]
-		_, ok2 := allcommands[incom]
-		if (ok && ok2 == false) {
+		//_, ok2 := allcommands[incom]
+		if (ok && cmds.Contains(incom) == false) {
 			jsonstr, _ := json.Marshal(map[string]string{"error": "the command is not applicable", "original":incom})
 			log.Println(string(jsonstr));
 			io.WriteString(resp, string(jsonstr))
@@ -97,7 +108,7 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 		ops.PushBack(paramap)
 	}
 
-	if(ops.Len()==0){
+	if (ops.Len() == 0) {
 		imaging.Encode(resp, outImage, imaging.JPEG)
 		return
 	}
@@ -139,10 +150,10 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 
 		//adjust
 		case "gamma":{
-			if value ,err:=checkStrength(v,0.7); err!=nil{
-				io.WriteString(resp, "gamma strength para error:"+err.Error())
+			if value, err := checkStrength(v, 0.7); err != nil {
+				io.WriteString(resp, "gamma strength para error:" + err.Error())
 				return
-			}else{
+			} else {
 				outImage = imaging.AdjustGamma(outImage, value)
 			}
 		}
@@ -151,19 +162,19 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 		}
 
 		case "contrast":{
-			if value ,err:=checkStrength(v,20); err!=nil{
-				io.WriteString(resp, "contrast strength para error:"+err.Error())
+			if value, err := checkStrength(v, 20); err != nil {
+				io.WriteString(resp, "contrast strength para error:" + err.Error())
 				return
-			}else{
+			} else {
 				outImage = imaging.AdjustContrast(outImage, value)
 			}
 		}
 		case "brightness":{
-			if value ,err:=checkStrength(v, 0.5); err!=nil{
-				io.WriteString(resp, "brightness strength para error:"+err.Error())
+			if value, err := checkStrength(v, 0.5); err != nil {
+				io.WriteString(resp, "brightness strength para error:" + err.Error())
 				return
-			}else{
-				outImage = imaging.AdjustBrightness(outImage,value)
+			} else {
+				outImage = imaging.AdjustBrightness(outImage, value)
 			}
 
 		}
@@ -180,18 +191,18 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 		//effects
 		case "blur":{
 
-			if value ,err:=checkStrength(v,3.5); err!=nil{
-				io.WriteString(resp, "brightness strength para error:"+err.Error())
+			if value, err := checkStrength(v, 3.5); err != nil {
+				io.WriteString(resp, "brightness strength para error:" + err.Error())
 				return
-			}else{
+			} else {
 				outImage = imaging.Blur(outImage, value)
 			}
 		}
 		case "sharpen":{
-			if value ,err:=checkStrength(v,3.5); err!=nil{
-				io.WriteString(resp, "brightness strength para error:"+err.Error())
+			if value, err := checkStrength(v, 3.5); err != nil {
+				io.WriteString(resp, "brightness strength para error:" + err.Error())
 				return
-			}else{
+			} else {
 				outImage = imaging.Sharpen(outImage, value)
 			}
 		}
@@ -220,11 +231,96 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 		case "transverse":{
 			outImage = imaging.Transverse(outImage)
 		}
+		case "mark":{
+			if _, ok := v["mid"]; ok {
+				if waterMarker, ok := markHash[v["mid"]]; ok {
+					offx := 10
+					offy := 10
+					offxTemp, okx := v["offx"]
+					offyTemp, oky := v["offy"]
+					log.Println(offxTemp)
+					log.Println(offyTemp)
+					if (okx && oky) {
+						if _, err:=strconv.Atoi(offxTemp);err!=nil{
+							if _, err:=strconv.Atoi(offyTemp);err!=nil{
+								offx,_ = strconv.Atoi(offxTemp);
+								offy,_ = strconv.Atoi(offyTemp);
+							}
+						}
+					}
+
+					offp := "rd"
+					offpTemp, okp := v["offp"]
+					if (okp && offps.Contains(offpTemp)){
+						offp=offpTemp
+					}
+
+					var bound =image.ZR
+					switch offp {
+					case "lr":{
+						bound=waterMarker.Bounds().Add(image.Pt(offx, offy))
+					}
+					case "rd":{
+						max:=outImage.Bounds().Sub(image.Pt(offx, offy)).Max
+						min := image.Pt(max.X-waterMarker.Bounds().Dx(),max.Y-waterMarker.Bounds().Dy())
+						bound.Max=max;
+						bound.Min=min;
+
+					}
+					case "ld":{
+						max := image.Pt(waterMarker.Bounds().Max.X+offx ,outImage.Bounds().Max.Y-offy)
+						min := image.Pt(waterMarker.Bounds().Min.X+offx ,outImage.Bounds().Max.Y-offy-waterMarker.Bounds().Dy())
+						bound.Max=max;
+						bound.Min=min;
+					}
+					case "ru":{
+						max := image.Pt(outImage.Bounds().Max.X-offx ,waterMarker.Bounds().Max.Y+offy)
+						min := image.Pt(outImage.Bounds().Max.X-offx-waterMarker.Bounds().Dx() ,waterMarker.Bounds().Min.Y+offy)
+						bound.Max=max;
+						bound.Min=min;
+					}
+					}
+
+
+
+
+
+					//offset := image.Pt(400, 400)
+					log.Println(waterMarker.Bounds())
+					log.Println(bound)
+					log.Println(waterMarker.Bounds().Add(image.Pt(offx,offy)))
+
+					//waterMarkerPost:=image.NewRGBA(waterMarker.Bounds()).Opaque()
+					var alpha uint8;
+
+					if alphaTemp, ok := v["alpha"];ok {
+						if alphaTempInt ,err:= strconv.ParseUint(alphaTemp,10,8) ;err==nil{
+							alpha=uint8(alphaTempInt)
+						}
+					}
+
+					mask := image.NewUniform(color.Alpha{alpha})
+					b := outImage.Bounds()
+					m := image.NewRGBA(b)
+					draw.Draw(m, b, outImage, image.ZP, draw.Src)
+					//draw.Draw(m, waterMarker.Bounds().Add(image.Pt(offx,offy)), waterMarker, image.ZP, draw.Over)
+					draw.DrawMask(m, bound, waterMarker, image.ZP,mask, image.ZP,draw.Over)
+					outImage = m
+				} else {
+					io.WriteString(resp, "marker image id is invalid")
+					return;
+				}
+			} else {
+				io.WriteString(resp, "marker image id is null")
+				return;
+			}
+
+
+			//draw.Draw(m, b, img, image.ZP, draw.Src)
+			//draw.Draw(m, watermark.Bounds().Add(offset), watermark, image.ZP, draw.Over)
+		}
 		}
 	}
-
-
-	formats:=map[string]string{"jpeg":"","png":"","gif":"","bmp":"","webp":""}
 
 	var quality int;
 	var command string;
@@ -232,29 +328,28 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 	for e := ops.Front(); e != nil; e = e.Next() {
 		v, _ := e.Value.(map[string]string)
 		quality, err = strconv.Atoi(v["q"])
-		command,ok = v["c"]
-		_,tok:=formats[command]
+		command, ok = v["c"]
+		//_, tok := formats[command]
 
-		if ok && tok{
+		if ok && formats.Contains(command) {
 			break
-		}else {
-			command="jpeg"
+		} else {
+			command = "jpeg"
 		}
 	}
 	//log.Println(outImage.Bounds().String())
 
 	if (outImage == nil) {
 		io.WriteString(resp, "outimage is null")
-	}else {
-		encode(resp,outImage,command,quality);
+	} else {
+		encode(resp, outImage, command, quality);
 	}
 
 	elapsed := time.Since(start)
 
-	accessLog.Printf("%-10s  %-20s %-50s",elapsed,req.RemoteAddr,req.URL)
+	accessLog.Printf("%-10s  %-20s %-50s", elapsed, req.RemoteAddr, req.URL)
 	return
 }
-
 
 func checkResizeParameter(para map[string]string) error {
 	intw, wr := strconv.Atoi(para["w"])
@@ -269,14 +364,14 @@ func checkResizeParameter(para map[string]string) error {
 	return nil
 }
 
-func checkStrength(para map[string]string,defaultValue float64) (float64,error) {
-	if _, ok :=para["s"]; ok {
-		if strength, err := strconv.ParseFloat(para["s"],64);err ==nil{
-			return strength,nil
-		}else {
-			return 0,err
+func checkStrength(para map[string]string, defaultValue float64) (float64, error) {
+	if _, ok := para["s"]; ok {
+		if strength, err := strconv.ParseFloat(para["s"], 64); err == nil {
+			return strength, nil
+		} else {
+			return 0, err
 		}
-	}else {
-		return defaultValue,nil;
+	} else {
+		return defaultValue, nil;
 	}
 }
