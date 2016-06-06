@@ -12,7 +12,6 @@ import (
 	"log"
 	"errors"
 	"time"
-	//"image/draw"
 	"github.com/deckarep/golang-set"
 	"image/draw"
 	"image/color"
@@ -232,92 +231,10 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 			outImage = imaging.Transverse(outImage)
 		}
 		case "mark":{
-			if _, ok := v["mid"]; ok {
-				if waterMarker, ok := markHash[v["mid"]]; ok {
-					offx := 10
-					offy := 10
-					offxTemp, okx := v["offx"]
-					offyTemp, oky := v["offy"]
-					log.Println(offxTemp)
-					log.Println(offyTemp)
-					if (okx && oky) {
-						if _, err:=strconv.Atoi(offxTemp);err!=nil{
-							if _, err:=strconv.Atoi(offyTemp);err!=nil{
-								offx,_ = strconv.Atoi(offxTemp);
-								offy,_ = strconv.Atoi(offyTemp);
-							}
-						}
-					}
-
-					offp := "rd"
-					offpTemp, okp := v["offp"]
-					if (okp && offps.Contains(offpTemp)){
-						offp=offpTemp
-					}
-
-					var bound =image.ZR
-					switch offp {
-					case "lr":{
-						bound=waterMarker.Bounds().Add(image.Pt(offx, offy))
-					}
-					case "rd":{
-						max:=outImage.Bounds().Sub(image.Pt(offx, offy)).Max
-						min := image.Pt(max.X-waterMarker.Bounds().Dx(),max.Y-waterMarker.Bounds().Dy())
-						bound.Max=max;
-						bound.Min=min;
-
-					}
-					case "ld":{
-						max := image.Pt(waterMarker.Bounds().Max.X+offx ,outImage.Bounds().Max.Y-offy)
-						min := image.Pt(waterMarker.Bounds().Min.X+offx ,outImage.Bounds().Max.Y-offy-waterMarker.Bounds().Dy())
-						bound.Max=max;
-						bound.Min=min;
-					}
-					case "ru":{
-						max := image.Pt(outImage.Bounds().Max.X-offx ,waterMarker.Bounds().Max.Y+offy)
-						min := image.Pt(outImage.Bounds().Max.X-offx-waterMarker.Bounds().Dx() ,waterMarker.Bounds().Min.Y+offy)
-						bound.Max=max;
-						bound.Min=min;
-					}
-					}
-
-
-
-
-
-					//offset := image.Pt(400, 400)
-					log.Println(waterMarker.Bounds())
-					log.Println(bound)
-					log.Println(waterMarker.Bounds().Add(image.Pt(offx,offy)))
-
-					//waterMarkerPost:=image.NewRGBA(waterMarker.Bounds()).Opaque()
-					var alpha uint8;
-
-					if alphaTemp, ok := v["alpha"];ok {
-						if alphaTempInt ,err:= strconv.ParseUint(alphaTemp,10,8) ;err==nil{
-							alpha=uint8(alphaTempInt)
-						}
-					}
-
-					mask := image.NewUniform(color.Alpha{alpha})
-					b := outImage.Bounds()
-					m := image.NewRGBA(b)
-					draw.Draw(m, b, outImage, image.ZP, draw.Src)
-					//draw.Draw(m, waterMarker.Bounds().Add(image.Pt(offx,offy)), waterMarker, image.ZP, draw.Over)
-					draw.DrawMask(m, bound, waterMarker, image.ZP,mask, image.ZP,draw.Over)
-					outImage = m
-				} else {
-					io.WriteString(resp, "marker image id is invalid")
-					return;
-				}
-			} else {
-				io.WriteString(resp, "marker image id is null")
+			if outImage ,err=mark(v,outImage);err !=nil{
+				io.WriteString(resp, err.Error())
 				return;
 			}
-
-
-			//draw.Draw(m, b, img, image.ZP, draw.Src)
-			//draw.Draw(m, watermark.Bounds().Add(offset), watermark, image.ZP, draw.Over)
 		}
 		}
 	}
@@ -351,6 +268,96 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 	return
 }
 
+
+
+func mark(para map[string]string, in image.Image) (image.Image,error) {
+
+	if _, ok := para["mid"]; ok {
+		if waterMarker, ok := markHash[para["mid"]]; ok {
+			offx := 10
+			offy := 10
+			offxTemp, okx := para["offx"]
+			offyTemp, oky := para["offy"]
+			if (okx && oky) {
+				if _, err:=strconv.Atoi(offxTemp);err==nil{
+					offx,_ = strconv.Atoi(offxTemp);
+				}else {
+					log.Println(err)
+				}
+
+				if _, err:=strconv.Atoi(offyTemp);err==nil{
+					offy,_ = strconv.Atoi(offyTemp);
+				}else {
+					log.Println(err)
+				}
+			}
+
+			offp := "rd"
+			offpTemp, okp := para["offp"]
+			if (okp && offps.Contains(offpTemp)){
+				offp=offpTemp
+			}
+
+			var bound =image.ZR
+			switch offp {
+			case "lu":{
+				bound=waterMarker.Bounds().Add(image.Pt(offx, offy))
+			}
+			case "rd":{
+				max:=in.Bounds().Sub(image.Pt(offx, offy)).Max
+				min := image.Pt(max.X-waterMarker.Bounds().Dx(),max.Y-waterMarker.Bounds().Dy())
+				bound.Max=max;
+				bound.Min=min;
+
+			}
+			case "ld":{
+				max := image.Pt(waterMarker.Bounds().Max.X+offx ,in.Bounds().Max.Y-offy)
+				min := image.Pt(waterMarker.Bounds().Min.X+offx ,in.Bounds().Max.Y-offy-waterMarker.Bounds().Dy())
+				bound.Max=max;
+				bound.Min=min;
+			}
+			case "ru":{
+				max := image.Pt(in.Bounds().Max.X-offx ,waterMarker.Bounds().Max.Y+offy)
+				min := image.Pt(in.Bounds().Max.X-offx-waterMarker.Bounds().Dx() ,waterMarker.Bounds().Min.Y+offy)
+				bound.Max=max;
+				bound.Min=min;
+			}
+			}
+
+
+
+
+
+			//offset := image.Pt(400, 400)
+			log.Println(waterMarker.Bounds())
+			log.Println(bound)
+			log.Println(waterMarker.Bounds().Add(image.Pt(offx,offy)))
+
+			//waterMarkerPost:=image.NewRGBA(waterMarker.Bounds()).Opaque()
+			var alpha uint8;
+
+			if alphaTemp, ok := para["alpha"];ok {
+				if alphaTempInt ,err:= strconv.ParseUint(alphaTemp,10,8) ;err==nil{
+					alpha=uint8(alphaTempInt)
+				}
+			}
+
+			mask := image.NewUniform(color.Alpha{alpha})
+			b := in.Bounds()
+			m := image.NewRGBA(b)
+			draw.Draw(m, b, in, image.ZP, draw.Src)
+			//draw.Draw(m, waterMarker.Bounds().Add(image.Pt(offx,offy)), waterMarker, image.ZP, draw.Over)
+			draw.DrawMask(m, bound, waterMarker, image.ZP,mask, image.ZP,draw.Over)
+			return  m,nil
+		} else {
+			return  nil ,errors.New("marker image id is null");
+		}
+	} else {
+		return  nil ,errors.New("marker image id is null");
+	}
+}
+
+
 func checkResizeParameter(para map[string]string) error {
 	intw, wr := strconv.Atoi(para["w"])
 	inth, hr := strconv.Atoi(para["h"])
@@ -363,6 +370,9 @@ func checkResizeParameter(para map[string]string) error {
 	}
 	return nil
 }
+
+
+
 
 func checkStrength(para map[string]string, defaultValue float64) (float64, error) {
 	if _, ok := para["s"]; ok {

@@ -10,8 +10,6 @@ import (
 	_ "net/http/pprof"
 	"github.com/BurntSushi/toml"
 	"image"
-	//"encoding/json"
-	//"io"
 	"github.com/disintegration/imaging"
 )
 
