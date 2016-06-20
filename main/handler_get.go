@@ -334,7 +334,7 @@ func mark(para map[string]string, in image.Image) (image.Image,error) {
 			log.Println(waterMarker.Bounds().Add(image.Pt(offx,offy)))
 
 			//waterMarkerPost:=image.NewRGBA(waterMarker.Bounds()).Opaque()
-			var alpha uint8;
+			var alpha uint8 = 100;
 
 			if alphaTemp, ok := para["alpha"];ok {
 				if alphaTempInt ,err:= strconv.ParseUint(alphaTemp,10,8) ;err==nil{

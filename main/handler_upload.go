@@ -54,9 +54,14 @@ const uploadhtml =
 </html>`
 
 func uploadMultiHandler(res http.ResponseWriter, req *http.Request)  {
+	if ipPass(req) ==false {
+		io.WriteString(res,"your ip address is forbiden to upload");
+		return
+	}
+
 	err:=req.ParseMultipartForm(1024);
 	if err!=nil{
-		io.WriteString(res,"error when parse multipart form file");
+		io.WriteString(res,"error when parse multipart form file"+err.Error());
 		return
 	}
 
@@ -76,6 +81,12 @@ func uploadMultiHandler(res http.ResponseWriter, req *http.Request)  {
 }
 
 func uploadBinHandler(res http.ResponseWriter, req *http.Request) {
+	if ipPass(req) ==false {
+		io.WriteString(res,"your ip address is forbiden to upload");
+		return
+	}
+
+
 	if req.Method =="GET" {
 		res.Header().Add("Content-Type","text/html; charset=utf-8")
 		io.WriteString(res,uploadhtml)

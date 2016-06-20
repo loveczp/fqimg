@@ -37,16 +37,20 @@ var store storage
 var sformat = "%-20s%-20s\n"
 
 type Config struct {
-	StorageType           string
-	FileDir               string
-	WeedMasterUrl         string
-	FastdfsConfigFilePath string
-	Port                  int
-	FaviconPath           string
-	DefaultAction         string
-	Headers               map[string]string
-	LogDir                string
-	Markers               map[string]string
+	StorageType            string
+	FileDir                string
+	WeedMasterUrl          string
+	FastdfsConfigFilePath  string
+	Port                   int
+	FaviconPath            string
+	DefaultAction          string
+	Headers                map[string]string
+	LogDir                 string
+	Markers                map[string]string
+	UploadAllowed          []string  //from  conf
+	UploadAllowedInterface []interface{}
+	UploadDeny             []string
+	UploadDenyInterface    []interface{}
 }
 
 var markHash = make(map[string]image.Image)
@@ -68,6 +72,17 @@ func init() {
 	fmt.Printf(sformat, "headers:", conf.Headers)
 	fmt.Printf(sformat, "log_dir:", conf.LogDir)
 	fmt.Printf(sformat, "Markers:", conf.Markers)
+	fmt.Printf(sformat, "UploadAllowed:", conf.UploadAllowed)
+	fmt.Printf(sformat, "UploadDeny:", conf.UploadDeny)
+
+	if (conf.UploadDeny!=nil && conf.UploadAllowed!=nil) {
+		log.Panic("uploadDeny and uploadAllowed and not be set at same time, please  delete uploadDeny or uploadAllowed ")
+	}
+	conf.UploadAllowedInterface = parseIp(conf.UploadAllowed)
+	conf.UploadDenyInterface = parseIp(conf.UploadDeny)
+
+	fmt.Printf(sformat, "UploadAllowedInterface:", conf.UploadAllowedInterface)
+	fmt.Printf(sformat, "UploadDenyInterface:", conf.UploadDenyInterface)
 
 	if (len(conf.Markers) > 0) {
 		for k, v := range conf.Markers {
