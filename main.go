@@ -11,6 +11,7 @@ import (
 	"github.com/BurntSushi/toml"
 	"image"
 	"github.com/disintegration/imaging"
+	imslib "go_image_server/imageserverlib"
 )
 
 func main() {
@@ -20,6 +21,7 @@ func main() {
 	http.HandleFunc("/", getHandler)
 	http.HandleFunc("/hello", helloHandle)
 	http.HandleFunc("/test", uploadTestHandler)
+	http.Handle("/file/", http.StripPrefix("/file/", http.FileServer(http.Dir("/pictest"))))
 
 	err := http.ListenAndServe(":" + strconv.Itoa(conf.Port), nil)
 	if err != nil {
@@ -47,10 +49,12 @@ type Config struct {
 	Headers                map[string]string
 	LogDir                 string
 	Markers                map[string]string
-	UploadAllowed          []string  //from  conf
+	UploadAllowed          []string //from  conf
 	UploadAllowedInterface []interface{}
 	UploadDeny             []string
 	UploadDenyInterface    []interface{}
+	FileCacheDir           string
+	FileCacheSize          int
 }
 
 var markHash = make(map[string]image.Image)
@@ -74,8 +78,18 @@ func init() {
 	fmt.Printf(sformat, "Markers:", conf.Markers)
 	fmt.Printf(sformat, "UploadAllowed:", conf.UploadAllowed)
 	fmt.Printf(sformat, "UploadDeny:", conf.UploadDeny)
+	fmt.Printf(sformat, "FileCacheDir:", conf.FileCacheDir)
+	fmt.Printf(sformat, "FileCacheSize:", conf.FileCacheSize)
 
-	if (conf.UploadDeny!=nil && conf.UploadAllowed!=nil) {
+	if (conf.FileCacheSize < 3 || conf.FileCacheSize > 10000) {
+		conf.FileCacheSize = 10000
+	}
+
+	if (len(conf.FileCacheDir) < 2) {
+		conf.FileCacheDir = "/var/go_image_server/"
+	}
+
+	if (conf.UploadDeny != nil && conf.UploadAllowed != nil) {
 		log.Panic("uploadDeny and uploadAllowed and not be set at same time, please  delete uploadDeny or uploadAllowed ")
 	}
 	conf.UploadAllowedInterface = parseIp(conf.UploadAllowed)
@@ -123,6 +137,11 @@ func init() {
 			store, _ = initFast(conf)
 			fmt.Printf("-------------::::::::::use fastdfs as storage ::::::::--------------")
 		}
+
+	}
+
+	if len(conf.FileCacheDir) > 2 {
+		os.MkdirAll(conf.FileCacheDir, 0777);
 	}
 }
 

@@ -1,4 +1,4 @@
-package main
+package imageserverlib
 
 import (
 	"github.com/disintegration/imaging"
@@ -15,6 +15,8 @@ import (
 	"github.com/deckarep/golang-set"
 	"image/draw"
 	"image/color"
+	"os"
+	"github.com/hashicorp/golang-lru"
 )
 
 var (
@@ -25,7 +27,27 @@ var (
 
 	formats = mapset.NewSetFromSlice([]interface{}{"jpeg", "png", "gif", "bmp", "webp"})
 	offps = mapset.NewSetFromSlice([]interface{}{"lu", "ru", "ld", "rd"})
+
+	fileCache *(lru.Cache)
 )
+
+type imageCacheItem struct {
+	key         string
+	filePath    string
+	contentType string
+}
+
+func removeFile(key interface{}, value interface{})  {
+	citem := value.(imageCacheItem)
+	log.Println("romve cache item go routin out :",citem.key);
+	go func(filePath string) {
+		log.Println("romve cache item go routin in :",filePath);
+		if _ ,err:=os.Stat(filePath);os.IsExist(err) {
+			err:=os.Remove(filePath)
+			log.Panic("remove cache item error:",err.Error())
+		}
+	}(citem.filePath)
+}
 
 func getHandler(resp http.ResponseWriter, req *http.Request) {
 	start := time.Now()
@@ -35,6 +57,38 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 			resp.Header().Add(key, value)
 		}
 	}
+
+	/**	get data from local file cache start	 */
+	log.Println("get cache, file cache key :", req.URL.String());
+
+	if fileCache==nil{
+		var err error;
+		fileCache, err = lru.NewWithEvict(conf.FileCacheSize, removeFile)
+		if err !=nil{
+			log.Panic("cache create error :",err)
+		}
+	}
+	log.Println("fileCache keys :", (*fileCache).Keys());
+	log.Println("fileCache keys Number:", (*fileCache).Len());
+
+	if item, ok := (*fileCache).Get(req.URL.String()); ok {
+		citem := item.(imageCacheItem)
+		if cfile, err := os.Open(citem.filePath); err == nil {
+			resp.Header().Add("content-type", citem.contentType)
+			io.Copy(resp, cfile);
+			log.Println("data from file cache:", req.URL.String());
+			defer  cfile.Close()
+			return;
+		} else {
+			//when cache error, get data from storage
+			(*fileCache).Remove(req.URL.String())
+			//io.WriteString(resp, "get cache data error:" + err.Error())
+			log.Println("data error from file cache:", req.URL.String());
+		}
+	}
+	/**	get data from local file cache end	 */
+
+	log.Println("data miss from cache:", req.URL.String());
 
 	key := req.URL.Path[1:]
 
@@ -231,7 +285,7 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 			outImage = imaging.Transverse(outImage)
 		}
 		case "mark":{
-			if outImage ,err=mark(v,outImage);err !=nil{
+			if outImage, err = mark(v, outImage); err != nil {
 				io.WriteString(resp, err.Error())
 				return;
 			}
@@ -259,7 +313,7 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 	if (outImage == nil) {
 		io.WriteString(resp, "outimage is null")
 	} else {
-		encode(resp, outImage, command, quality);
+		encode(resp, req, outImage, command, quality);
 	}
 
 	elapsed := time.Since(start)
@@ -268,9 +322,7 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 	return
 }
 
-
-
-func mark(para map[string]string, in image.Image) (image.Image,error) {
+func mark(para map[string]string, in image.Image) (image.Image, error) {
 
 	if _, ok := para["mid"]; ok {
 		if waterMarker, ok := markHash[para["mid"]]; ok {
@@ -279,48 +331,48 @@ func mark(para map[string]string, in image.Image) (image.Image,error) {
 			offxTemp, okx := para["offx"]
 			offyTemp, oky := para["offy"]
 			if (okx && oky) {
-				if _, err:=strconv.Atoi(offxTemp);err==nil{
-					offx,_ = strconv.Atoi(offxTemp);
-				}else {
+				if _, err := strconv.Atoi(offxTemp); err == nil {
+					offx, _ = strconv.Atoi(offxTemp);
+				} else {
 					log.Println(err)
 				}
 
-				if _, err:=strconv.Atoi(offyTemp);err==nil{
-					offy,_ = strconv.Atoi(offyTemp);
-				}else {
+				if _, err := strconv.Atoi(offyTemp); err == nil {
+					offy, _ = strconv.Atoi(offyTemp);
+				} else {
 					log.Println(err)
 				}
 			}
 
 			offp := "rd"
 			offpTemp, okp := para["offp"]
-			if (okp && offps.Contains(offpTemp)){
-				offp=offpTemp
+			if (okp && offps.Contains(offpTemp)) {
+				offp = offpTemp
 			}
 
-			var bound =image.ZR
+			var bound = image.ZR
 			switch offp {
 			case "lu":{
-				bound=waterMarker.Bounds().Add(image.Pt(offx, offy))
+				bound = waterMarker.Bounds().Add(image.Pt(offx, offy))
 			}
 			case "rd":{
-				max:=in.Bounds().Sub(image.Pt(offx, offy)).Max
-				min := image.Pt(max.X-waterMarker.Bounds().Dx(),max.Y-waterMarker.Bounds().Dy())
-				bound.Max=max;
-				bound.Min=min;
+				max := in.Bounds().Sub(image.Pt(offx, offy)).Max
+				min := image.Pt(max.X - waterMarker.Bounds().Dx(), max.Y - waterMarker.Bounds().Dy())
+				bound.Max = max;
+				bound.Min = min;
 
 			}
 			case "ld":{
-				max := image.Pt(waterMarker.Bounds().Max.X+offx ,in.Bounds().Max.Y-offy)
-				min := image.Pt(waterMarker.Bounds().Min.X+offx ,in.Bounds().Max.Y-offy-waterMarker.Bounds().Dy())
-				bound.Max=max;
-				bound.Min=min;
+				max := image.Pt(waterMarker.Bounds().Max.X + offx, in.Bounds().Max.Y - offy)
+				min := image.Pt(waterMarker.Bounds().Min.X + offx, in.Bounds().Max.Y - offy - waterMarker.Bounds().Dy())
+				bound.Max = max;
+				bound.Min = min;
 			}
 			case "ru":{
-				max := image.Pt(in.Bounds().Max.X-offx ,waterMarker.Bounds().Max.Y+offy)
-				min := image.Pt(in.Bounds().Max.X-offx-waterMarker.Bounds().Dx() ,waterMarker.Bounds().Min.Y+offy)
-				bound.Max=max;
-				bound.Min=min;
+				max := image.Pt(in.Bounds().Max.X - offx, waterMarker.Bounds().Max.Y + offy)
+				min := image.Pt(in.Bounds().Max.X - offx - waterMarker.Bounds().Dx(), waterMarker.Bounds().Min.Y + offy)
+				bound.Max = max;
+				bound.Min = min;
 			}
 			}
 
@@ -331,14 +383,14 @@ func mark(para map[string]string, in image.Image) (image.Image,error) {
 			//offset := image.Pt(400, 400)
 			log.Println(waterMarker.Bounds())
 			log.Println(bound)
-			log.Println(waterMarker.Bounds().Add(image.Pt(offx,offy)))
+			log.Println(waterMarker.Bounds().Add(image.Pt(offx, offy)))
 
 			//waterMarkerPost:=image.NewRGBA(waterMarker.Bounds()).Opaque()
 			var alpha uint8 = 100;
 
-			if alphaTemp, ok := para["alpha"];ok {
-				if alphaTempInt ,err:= strconv.ParseUint(alphaTemp,10,8) ;err==nil{
-					alpha=uint8(alphaTempInt)
+			if alphaTemp, ok := para["alpha"]; ok {
+				if alphaTempInt, err := strconv.ParseUint(alphaTemp, 10, 8); err == nil {
+					alpha = uint8(alphaTempInt)
 				}
 			}
 
@@ -347,16 +399,15 @@ func mark(para map[string]string, in image.Image) (image.Image,error) {
 			m := image.NewRGBA(b)
 			draw.Draw(m, b, in, image.ZP, draw.Src)
 			//draw.Draw(m, waterMarker.Bounds().Add(image.Pt(offx,offy)), waterMarker, image.ZP, draw.Over)
-			draw.DrawMask(m, bound, waterMarker, image.ZP,mask, image.ZP,draw.Over)
-			return  m,nil
+			draw.DrawMask(m, bound, waterMarker, image.ZP, mask, image.ZP, draw.Over)
+			return m, nil
 		} else {
-			return  nil ,errors.New("marker image id is null");
+			return nil, errors.New("marker image id is null");
 		}
 	} else {
-		return  nil ,errors.New("marker image id is null");
+		return nil, errors.New("marker image id is null");
 	}
 }
-
 
 func checkResizeParameter(para map[string]string) error {
 	intw, wr := strconv.Atoi(para["w"])
@@ -370,9 +421,6 @@ func checkResizeParameter(para map[string]string) error {
 	}
 	return nil
 }
-
-
-
 
 func checkStrength(para map[string]string, defaultValue float64) (float64, error) {
 	if _, ok := para["s"]; ok {

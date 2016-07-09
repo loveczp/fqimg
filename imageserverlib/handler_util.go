@@ -1,4 +1,4 @@
-package main
+package imageserverlib
 
 import (
 	"github.com/disintegration/imaging"
@@ -15,6 +15,8 @@ import (
 	"log"
 	"net"
 	"strconv"
+	"os"
+	"encoding/base64"
 )
 
 func stringToAnchor(instr  string) imaging.Anchor {
@@ -100,9 +102,22 @@ type cache interface {
 	cachePut(url string, desc io.Reader) error
 }
 
-func encode(w http.ResponseWriter, img image.Image, format string, quality int) error {
+func encode(w http.ResponseWriter, req *http.Request, img image.Image, format string, quality int) error {
 	//log.Println(format,quality)
+
+
+	//put to lru cache   start
+	cPath := conf.FileCacheDir + base64.StdEncoding.EncodeToString([]byte(req.URL.String()));
+	var tempFile *(os.File)
 	var err error
+	if _, err := os.Stat(cPath); !os.IsExist(err) {
+		tempFile, err = os.Create(cPath);
+		defer (*tempFile).Close()
+	}
+
+	log.Println("cache set data , key ", req.URL.String())
+	citem := imageCacheItem{filePath:cPath, key:req.URL.String()}
+
 	switch format {
 	case "jpeg":
 		var rgba *image.RGBA
@@ -120,77 +135,100 @@ func encode(w http.ResponseWriter, img image.Image, format string, quality int) 
 		}
 
 		w.Header().Add("content-type", "image/jpeg")
+		citem.contentType = "image/jpeg"
 		if rgba != nil {
 			err = jpeg.Encode(w, rgba, &jpeg.Options{Quality: quality})
+			if tempFile != nil {
+				err = jpeg.Encode(tempFile, rgba, &jpeg.Options{Quality: quality})
+			}
 		} else {
 			err = jpeg.Encode(w, img, &jpeg.Options{Quality: quality})
+			if tempFile != nil {
+				err = jpeg.Encode(tempFile, img, &jpeg.Options{Quality: quality})
+			}
 		}
 
 	case "png":
 		w.Header().Add("content-type", "image/png")
+		citem.contentType = "image/png"
+
 		err = png.Encode(w, img)
+		if tempFile != nil {
+			err = png.Encode(tempFile, img)
+		}
 	case "gif":
 		w.Header().Add("content-type", "image/gif")
+		citem.contentType = "image/gif"
 		if quality < 1 || 256 < quality {
 			quality = 256
 		}
 		err = gif.Encode(w, img, &gif.Options{NumColors: quality})
+		if tempFile != nil {
+			err = gif.Encode(tempFile, img, &gif.Options{NumColors: quality})
+		}
 	case "bmp":
 		w.Header().Add("content-type", "image/bmp")
+		citem.contentType = "image/bmp"
 		err = bmp.Encode(w, img)
+		if tempFile != nil {
+			err = bmp.Encode(tempFile, img)
+		}
 	case "webp":
 		w.Header().Add("content-type", "image/webp")
+		citem.contentType = "image/webp"
 		if quality < 1 || 100 < quality {
 			quality = 50
 		}
-		if err = webp.Encode(w, img, &webp.Options{Lossless: false, Quality:float32(quality)}); err != nil {
-			log.Fatalln(err)
+		err = webp.Encode(w, img, &webp.Options{Lossless: false, Quality:float32(quality)});
+		if tempFile != nil {
+			err = webp.Encode(tempFile, img, &webp.Options{Lossless: false, Quality:float32(quality)});
 		}
 	default:
 		err = errors.New("format not supported")
 	}
+
+	(*fileCache).Add(req.URL.String(), citem)
 	return err
 }
 
 func parseIp(ips []string) []interface{} {
-	re:=make([]interface{},len(ips));
+	re := make([]interface{}, len(ips));
 	for i := 0; i < len(ips); i++ {
-		if strings.Contains(ips[i],"/"){
-			parts := strings.Split(ips[i],"/");
-			netipTemp :=parts[0];
-			masklenStrTemp :=parts[1];
-			netip:= net.ParseIP(netipTemp);
-			maskLenTemp ,err1 :=strconv.Atoi(masklenStrTemp);
-			if err1!=nil{
+		if strings.Contains(ips[i], "/") {
+			parts := strings.Split(ips[i], "/");
+			netipTemp := parts[0];
+			masklenStrTemp := parts[1];
+			netip := net.ParseIP(netipTemp);
+			maskLenTemp, err1 := strconv.Atoi(masklenStrTemp);
+			if err1 != nil {
 				log.Fatalln(err1);
 				return nil;
 			}
-			mask := net.CIDRMask(maskLenTemp,32)
-			re[i]=net.IPNet{netip,mask}
-		}else{
-			re[i]=net.ParseIP(ips[i]);
+			mask := net.CIDRMask(maskLenTemp, 32)
+			re[i] = net.IPNet{netip, mask}
+		} else {
+			re[i] = net.ParseIP(ips[i]);
 		}
 	}
 	return re
 }
 
-
 func ipPass(req *http.Request) bool {
-	adds:=strings.Split(req.RemoteAddr,":")
-	ip:= net.ParseIP(adds[0]);
+	adds := strings.Split(req.RemoteAddr, ":")
+	ip := net.ParseIP(adds[0]);
 	//log.Print("req remote ip :", ip)
-	if len(conf.UploadAllowedInterface)>0{
+	if len(conf.UploadAllowedInterface) > 0 {
 
-		for i:=0 ; i< len(conf.UploadAllowedInterface) ; i++{
+		for i := 0; i < len(conf.UploadAllowedInterface); i++ {
 			switch conf.UploadAllowedInterface[i].(type) {
 			case net.IPNet:
-				ipnet:=conf.UploadAllowedInterface[i].(net.IPNet)
+				ipnet := conf.UploadAllowedInterface[i].(net.IPNet)
 				if ipnet.Contains(ip) {
 					//log.Println(ip.String()," match allow: ",ipnet.String())
 					return true;
 				}
 			case net.IP:
-				thisip:=conf.UploadAllowedInterface[i].(net.IP)
+				thisip := conf.UploadAllowedInterface[i].(net.IP)
 				if thisip.Equal(ip) {
 					//log.Println(ip.String()," match allow: ",thisip.String())
 					return true;
@@ -201,17 +239,17 @@ func ipPass(req *http.Request) bool {
 		return false;
 	}
 
-	if len(conf.UploadDenyInterface) >  0 {
-		for i:=0 ; i< len(conf.UploadDenyInterface) ; i++{
+	if len(conf.UploadDenyInterface) > 0 {
+		for i := 0; i < len(conf.UploadDenyInterface); i++ {
 			switch conf.UploadDenyInterface[i].(type) {
 			case net.IPNet:
-				ipnet:=conf.UploadDenyInterface[i].(net.IPNet)
+				ipnet := conf.UploadDenyInterface[i].(net.IPNet)
 				if ipnet.Contains(ip) {
 					//log.Println(ip.String()," match deny: ",ipnet.String())
 					return false;
 				}
 			case net.IP:
-				thisip:=conf.UploadDenyInterface[i].(net.IP)
+				thisip := conf.UploadDenyInterface[i].(net.IP)
 				if thisip.Equal(ip) {
 					//log.Println(ip.String()," match deny: ",thisip.String())
 					return false;
