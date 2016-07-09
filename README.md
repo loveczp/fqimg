@@ -23,8 +23,7 @@ http://45.78.62.199:12345/2830dfa89daaf37b13c3421b7807df27?c=fill&w=400&h=400
 [http://45.78.62.199:12345/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale](‘http://45.78.62.199:12345/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale’)
 
 
-webp处理的例子
-可以把图片裁剪成400*400后，还可以进行灰度处理。如下
+webp处理的例子。如下
 http://45.78.62.199:12345/2830dfa89daaf37b13c3421b7807df27?c=webp&q=50
 
 
@@ -41,7 +40,8 @@ http://45.78.62.199:12345/2830dfa89daaf37b13c3421b7807df27?c=webp&q=50
 
 ###文档。
 ##1.安装及运行
-下载对应版本的可执行文件：windows64，linux64
+下载对应版本的可执行文件：
+[windows64，linux64]('http://pan.baidu.com/s/1hr7VYle')
 直接执行即可
 
 
