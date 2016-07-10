@@ -7,7 +7,9 @@
 * 4.webp图片格式支持。webp比之于jpeg，能更好的压缩图片的存储和传输体积，这点对移动应用尤为重要。
 * 5.部署简单，只有一个可执行文件，不依赖任何外部运行库，只需将可执行文件拷贝到服务器即可执行。
 * 6.支持多种输出格式和输出质量。当前能够支持jpeg，gif，png，bmp，webp格式，对于jpeg，gif，webp还能够支持自定义输出图片质量。
-
+* 7.支持本地文件缓存，极大提高性能。
+* 8.支持上传控制，确保只有可信IP才能上传。
+* 9.支持三种存储后端，本地文件，[fastdfs]('http://45.78.62.199:12345/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale')，[seaweeddfs]('https://github.com/chrislusf/seaweedfs')
 
 
 ###示例
@@ -20,7 +22,7 @@ http://45.78.62.199:12345/2830dfa89daaf37b13c3421b7807df27?c=fill&w=400&h=400
 
 链式处理的例子
 可以把图片裁剪成400*400后，还可以进行灰度处理。如下
-[http://45.78.62.199:12345/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale](‘http://45.78.62.199:12345/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale’)
+[http://45.78.62.199:12345/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale]('http://45.78.62.199:12345/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale')
 
 
 webp处理的例子。如下
