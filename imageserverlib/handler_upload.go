@@ -9,12 +9,12 @@ import (
 	"fmt"
 )
 
-func helloHandle(w http.ResponseWriter, r *http.Request) {
+func HelloHandle(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "hello world!")
 }
 
-func handleFav(w http.ResponseWriter, r *http.Request)  {
-	if ffile ,err :=os.Open(conf.FaviconPath); err==nil{
+func FavHandle(w http.ResponseWriter, r *http.Request)  {
+	if ffile ,err :=os.Open(Conf.FaviconPath); err==nil{
 		io.Copy(w,ffile);
 	}
 	return ;
@@ -53,7 +53,7 @@ const uploadhtml =
     </form>
 </html>`
 
-func uploadMultiHandler(res http.ResponseWriter, req *http.Request)  {
+func UploadMultiHandler(res http.ResponseWriter, req *http.Request)  {
 	if ipPass(req) ==false {
 		io.WriteString(res,"your ip address is forbiden to upload");
 		return
@@ -80,7 +80,7 @@ func uploadMultiHandler(res http.ResponseWriter, req *http.Request)  {
 	io.WriteString(res, string(restring))
 }
 
-func uploadBinHandler(res http.ResponseWriter, req *http.Request) {
+func UploadBinHandler(res http.ResponseWriter, req *http.Request) {
 	if ipPass(req) ==false {
 		io.WriteString(res,"your ip address is forbiden to upload");
 		return
@@ -121,7 +121,7 @@ func uploadBinHandler(res http.ResponseWriter, req *http.Request) {
 
 
 
-func uploadTestHandler(res http.ResponseWriter, req *http.Request) {
+func UploadTestHandler(res http.ResponseWriter, req *http.Request) {
 	data,_:=json.Marshal( req.Header)
 	fmt.Println("header:",string(data))
 	fmt.Println("body:",req.Body)

@@ -107,7 +107,7 @@ func encode(w http.ResponseWriter, req *http.Request, img image.Image, format st
 
 
 	//put to lru cache   start
-	cPath := conf.FileCacheDir + base64.StdEncoding.EncodeToString([]byte(req.URL.String()));
+	cPath := Conf.FileCacheDir + base64.StdEncoding.EncodeToString([]byte(req.URL.String()));
 	var tempFile *(os.File)
 	var err error
 	if _, err := os.Stat(cPath); !os.IsExist(err) {
@@ -217,18 +217,18 @@ func ipPass(req *http.Request) bool {
 	adds := strings.Split(req.RemoteAddr, ":")
 	ip := net.ParseIP(adds[0]);
 	//log.Print("req remote ip :", ip)
-	if len(conf.UploadAllowedInterface) > 0 {
+	if len(Conf.UploadAllowedInterface) > 0 {
 
-		for i := 0; i < len(conf.UploadAllowedInterface); i++ {
-			switch conf.UploadAllowedInterface[i].(type) {
+		for i := 0; i < len(Conf.UploadAllowedInterface); i++ {
+			switch Conf.UploadAllowedInterface[i].(type) {
 			case net.IPNet:
-				ipnet := conf.UploadAllowedInterface[i].(net.IPNet)
+				ipnet := Conf.UploadAllowedInterface[i].(net.IPNet)
 				if ipnet.Contains(ip) {
 					//log.Println(ip.String()," match allow: ",ipnet.String())
 					return true;
 				}
 			case net.IP:
-				thisip := conf.UploadAllowedInterface[i].(net.IP)
+				thisip := Conf.UploadAllowedInterface[i].(net.IP)
 				if thisip.Equal(ip) {
 					//log.Println(ip.String()," match allow: ",thisip.String())
 					return true;
@@ -239,17 +239,17 @@ func ipPass(req *http.Request) bool {
 		return false;
 	}
 
-	if len(conf.UploadDenyInterface) > 0 {
-		for i := 0; i < len(conf.UploadDenyInterface); i++ {
-			switch conf.UploadDenyInterface[i].(type) {
+	if len(Conf.UploadDenyInterface) > 0 {
+		for i := 0; i < len(Conf.UploadDenyInterface); i++ {
+			switch Conf.UploadDenyInterface[i].(type) {
 			case net.IPNet:
-				ipnet := conf.UploadDenyInterface[i].(net.IPNet)
+				ipnet := Conf.UploadDenyInterface[i].(net.IPNet)
 				if ipnet.Contains(ip) {
 					//log.Println(ip.String()," match deny: ",ipnet.String())
 					return false;
 				}
 			case net.IP:
-				thisip := conf.UploadDenyInterface[i].(net.IP)
+				thisip := Conf.UploadDenyInterface[i].(net.IP)
 				if thisip.Equal(ip) {
 					//log.Println(ip.String()," match deny: ",thisip.String())
 					return false;

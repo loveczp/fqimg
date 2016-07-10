@@ -49,11 +49,11 @@ func removeFile(key interface{}, value interface{})  {
 	}(citem.filePath)
 }
 
-func getHandler(resp http.ResponseWriter, req *http.Request) {
+func GetHandler(resp http.ResponseWriter, req *http.Request) {
 	start := time.Now()
 	//log.Println(headers);
-	if conf.Headers != nil && len(conf.Headers) > 0 {
-		for key, value := range conf.Headers {
+	if Conf.Headers != nil && len(Conf.Headers) > 0 {
+		for key, value := range Conf.Headers {
 			resp.Header().Add(key, value)
 		}
 	}
@@ -63,7 +63,7 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 
 	if fileCache==nil{
 		var err error;
-		fileCache, err = lru.NewWithEvict(conf.FileCacheSize, removeFile)
+		fileCache, err = lru.NewWithEvict(Conf.FileCacheSize, removeFile)
 		if err !=nil{
 			log.Panic("cache create error :",err)
 		}
@@ -116,8 +116,8 @@ func getHandler(resp http.ResponseWriter, req *http.Request) {
 
 	//if no action presented , add default action
 	query := req.URL.RawQuery;
-	if len(query) == 0 && len(conf.DefaultAction) > 2 {
-		query = conf.DefaultAction;
+	if len(query) == 0 && len(Conf.DefaultAction) > 2 {
+		query = Conf.DefaultAction;
 		//log.Println("defaultAction:"+default_action)
 	}
 
