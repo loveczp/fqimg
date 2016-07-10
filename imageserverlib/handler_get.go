@@ -42,10 +42,16 @@ func removeFile(key interface{}, value interface{})  {
 	log.Println("romve cache item go routin out :",citem.key);
 	go func(filePath string) {
 		log.Println("romve cache item go routin in :",filePath);
-		if _ ,err:=os.Stat(filePath);os.IsExist(err) {
+		if _, err := os.Stat(filePath); err == nil {
 			err:=os.Remove(filePath)
-			log.Panic("remove cache item error:",err.Error())
+			if err!=nil{
+				log.Panic("remove cache item error:",err.Error())
+			}
+		}else{
+			log.Println("romve cache item ,file to be removed is not exsit :",filePath);
 		}
+
+
 	}(citem.filePath)
 }
 

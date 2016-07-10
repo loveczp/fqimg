@@ -51,7 +51,7 @@ func init() {
 	fmt.Printf("%-20s%-20d\n", "port:", Conf.Port)
 	fmt.Printf(sformat, "favicon_path:", Conf.FaviconPath)
 	fmt.Printf(sformat, "default_action:", Conf.DefaultAction)
-	fmt.Printf(sformat, "headers:", Conf.Headers)
+	fmt.Printf(sformat, "Headers:", Conf.Headers)
 	fmt.Printf(sformat, "log_dir:", Conf.LogDir)
 	fmt.Printf(sformat, "Markers:", Conf.Markers)
 	fmt.Printf(sformat, "UploadAllowed:", Conf.UploadAllowed)
