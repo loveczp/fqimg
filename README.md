@@ -18,7 +18,7 @@ http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27
 
 动态剪裁的例子
 动态剪裁成400*400的图如下，当然高宽值可以设置成我们需要的任意值
-http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1?c=fill&w=400&h=400
+http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=400&h=400
 
 链式处理的例子
 可以把图片裁剪成400*400后，还可以进行灰度处理。如下
