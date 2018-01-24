@@ -9,12 +9,12 @@
 * 6.支持多种输出格式和输出质量。当前能够支持jpeg，gif，png，bmp，webp格式，对于jpeg，gif，webp还能够支持自定义输出图片质量。
 * 7.支持本地文件缓存，极大提高性能。
 * 8.支持上传控制，确保只有可信IP才能上传。
-* 9.支持三种存储后端，本地文件，[fastdfs]('http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale')，[seaweeddfs]('https://github.com/chrislusf/seaweedfs')
+* 9.支持三种存储后端，本地文件，[fastdfs]('http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fit&w=200&h=300|c=grayscale')，[seaweeddfs]('https://github.com/chrislusf/seaweedfs')
 
 
 ###示例
 原图如下
-http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1
+http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27
 
 动态剪裁的例子
 动态剪裁成400*400的图如下，当然高宽值可以设置成我们需要的任意值
@@ -22,11 +22,11 @@ http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1?c=fill&w=400&h=400
 
 链式处理的例子
 可以把图片裁剪成400*400后，还可以进行灰度处理。如下
-[http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale]('http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale')
+[http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fit&w=200&h=300|c=grayscale]('http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fit&w=200&h=300|c=grayscale')
 
 
 webp处理的例子。如下
-http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1?c=webp&q=50
+http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=webp&q=50
 
 
 
@@ -55,19 +55,19 @@ curl  --data-binary @test.jpg "http://http://image.fanqiangti.net/upload"
 md5就是文件对应的MD5码，系统也是用这个来定位上传的文件。
 
 访问该文件方法如下
-http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1
+http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27
 
 ##3.图片操作
 每一个图片操作就是一个处理命令，命令有0个或者多个参数，参数包含参数名和参数值。参数是以url的参数的方式放在url尾部。即？后面就是参数。
 命令名称用c表示，命令的值在下面的表中找。
 例如
-http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300
+http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fit&w=200&h=300
 上面的命令表示对图片进行压缩，使图片能够容纳在一个200*300的框内。命令本身参数名是c，值是fit。fit命令包含两个参数h，w分别表示高和宽。
 
 
 命令之间可以通过管道链接符号“|”把多个命令连接起来实现多重操作。
 例如
-[http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale]('http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale')
+[http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fit&w=200&h=300|c=grayscale]('http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fit&w=200&h=300|c=grayscale')
 上面表示先推图像进行fit压缩操作，然后对操作后的结果进行灰度化 处理。
 
 
