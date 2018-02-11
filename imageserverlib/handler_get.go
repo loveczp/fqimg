@@ -41,7 +41,7 @@ func removeFile(key interface{}, value interface{})  {
 	citem := value.(imageCacheItem)
 	log.Println("romve cache item go routin out :",citem.key);
 	go func(filePath string) {
-		log.Println("romve cache item go routin in :",filePath);
+		//log.Println("romve cache item go routin in :",filePath);
 		if _, err := os.Stat(filePath); err == nil {
 			err:=os.Remove(filePath)
 			if err!=nil{
@@ -65,7 +65,7 @@ func GetHandler(resp http.ResponseWriter, req *http.Request) {
 	}
 
 	/**	get data from local file cache start	 */
-	log.Println("get cache, file cache key :", req.URL.String());
+	//log.Println("get cache, file cache key :", req.URL.String());
 
 	if fileCache==nil{
 		var err error;
@@ -74,8 +74,8 @@ func GetHandler(resp http.ResponseWriter, req *http.Request) {
 			log.Panic("cache create error :",err)
 		}
 	}
-	log.Println("fileCache keys :", (*fileCache).Keys());
-	log.Println("fileCache keys Number:", (*fileCache).Len());
+	//log.Println("fileCache keys :", (*fileCache).Keys());
+	//log.Println("fileCache keys Number:", (*fileCache).Len());
 
 	if item, ok := (*fileCache).Get(req.URL.String()); ok {
 		citem := item.(imageCacheItem)
@@ -94,7 +94,7 @@ func GetHandler(resp http.ResponseWriter, req *http.Request) {
 	}
 	/**	get data from local file cache end	 */
 
-	log.Println("data miss from cache:", req.URL.String());
+	//log.Println("data miss from cache:", req.URL.String());
 
 	key := req.URL.Path[1:]
 
