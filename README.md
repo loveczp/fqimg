@@ -23,7 +23,7 @@ http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=400&h=400
 
 链式处理的例子
 可以把图片裁剪成400*400后，还可以进行灰度处理。如下
-<a href="http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale">http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale</a>
+<a href="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fit&w=200&h=300|c=grayscale">http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fit&w=200&h=300|c=grayscale</a>
 
 webp处理的例子。如下
 http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=webp&q=50
@@ -33,10 +33,11 @@ http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=webp&q=50
 <h1>未来开发路线图</h1>
 
 <ol>
-<li>~~支持自定义输出格式和格式质量，比如输出jpg，png，gif~~。(已完成)</li>
-<li>~~支持webp格式。webp格式压缩的图片尺寸更小~~。(已完成)</li>
-<li>~~增加后端分布式存储。当前版本只支持本地文件系统存储，只能利用单台机器的存储能力。~~(已完成)</li>
-<li>~~增加安全性。对于恶意攻击增加防御能力。~~(已完成,请见配置文件中的上传控制)</li>
+<li><s>支持自定义输出格式和格式质量，比如输出jpg，png，gif。(已完成)</s></li>
+<li><s>支持webp格式。webp格式压缩的图片尺寸更小。(已完成)</s></li>
+<li><s>增加后端分布式存储。当前版本只支持本地文件系统存储，只能利用单台机器的存储能力。(已完成)</s></li>
+<li><s>增加安全性。对于恶意攻击增加防御能力。(已完成,请见配置文件中的上传控制)</s></li>
+<li>开发插件系统，使其更容已扩展</li>
 </ol>
 
 
