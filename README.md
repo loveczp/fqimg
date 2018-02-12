@@ -44,37 +44,42 @@ http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=webp&q=50
 
 <h1>文档。</h1>
 <h2>1.安装及运行</h2>
-下载对应版本的可执行文件：
-[windows64，linux64]('http://pan.baidu.com/s/1hr7VYle')
-直接执行即可
+<p>
+go get github.com/loveczp/go_image_server<br/>
+注意，在windows上务必安装<a href="http://tdm-gcc.tdragon.net/download">tdm-gcc</a>否则无法编译安装通过</br>
 
+然后运行
+go_image_server -c=path/to/config/file
+</p>
 
 <h2>2.图片上传</h2>
 curl  --data-binary @test.jpg "http://http://image.fanqiangti.net/upload"
 其中test.jpg是需要上传的文件，这个对应于http中的binary的post上传，windows平台下可以用postman来模拟。
 可以得到如下结果。
-{"md5":"b59fe5a3cd71bc28e39e444cd955fcb1","msg":"ok"}
+{"md5":"2830dfa89daaf37b13c3421b7807df27","msg":"ok"}
 md5就是文件对应的MD5码，系统也是用这个来定位上传的文件。
 
 访问该文件方法如下
-http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1
+http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27
 
 <h2>3.图片操作</h2>
 每一个图片操作就是一个处理命令，命令有0个或者多个参数，参数包含参数名和参数值。参数是以url的参数的方式放在url尾部。即？后面就是参数。
 命令名称用c表示，命令的值在下面的表中找。
 例如
-http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300
+http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fit&w=200&h=300
 上面的命令表示对图片进行压缩，使图片能够容纳在一个200*300的框内。命令本身参数名是c，值是fit。fit命令包含两个参数h，w分别表示高和宽。
 
 
 命令之间可以通过管道链接符号“|”把多个命令连接起来实现多重操作。
 例如
-<a href="http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale">http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale</a>
+<a href="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fit&w=200&h=300|c=grayscale">http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fit&w=200&h=300|c=grayscale</a>
 上面表示先推图像进行fit压缩操作，然后对操作后的结果进行灰度化 处理。
 
 
 
-
+<h1>开发注意事项</h1>
+因为需要支持webp，所以使用了github.com/chai2010/webp 这个webp库，
+在<bold>windows</blod>上需要mingw的支持，请下载
 
 
 
