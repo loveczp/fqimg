@@ -107,13 +107,17 @@ func GetHandler(resp http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		jsonstr, _ := json.Marshal(map[string]string{"error": "the image you reqeust does not exist:" + err.Error(), "original":key})
 		log.Println(string(jsonstr));
+		resp.WriteHeader(http.StatusNotFound)
 		io.WriteString(resp, string(jsonstr))
 		return
 	}
 	outImage, err = imaging.Decode(reader)
 
 	if err != nil {
+
 		log.Println("image docode error:" + err.Error());
+
+		resp.WriteHeader(http.StatusInternalServerError)
 		io.WriteString(resp, "image docode error:" + err.Error())
 		return
 	}
