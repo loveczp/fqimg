@@ -53,7 +53,7 @@ go_image_server -c=path/to/config/file
 </p>
 
 <h2>2.图片上传</h2>
-curl  --data-binary @test.jpg "http://http://image.fanqiangti.net/upload"
+curl  --data-binary @test.jpg "http://image.fanqiangti.net/upload"
 其中test.jpg是需要上传的文件，这个对应于http中的binary的post上传，windows平台下可以用postman来模拟。
 可以得到如下结果。
 {"md5":"2830dfa89daaf37b13c3421b7807df27","msg":"ok"}
