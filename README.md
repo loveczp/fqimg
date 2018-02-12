@@ -78,140 +78,155 @@ http://45.78.62.199:12345/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300
 
 <h1>命令列表</h1>
 
-
-
 <table>
     <tr>
         <td>fit</td>
-        <td>w:宽(int)<br/>h:高(int)</td>
-        <td>c=fit&w=100&h=300  <br/>保持图片本身的比例，压缩图片尺寸，使其能容纳到100*300的方框内，框的上下或者左右可能会有空白。</td>
-        <td>http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fit&w=150&h=150<br/>
-            <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fit&w=150&h=150" /></td>
-        
+        <td>w:宽(int)
+            <br/>h:高(int)</td>
+        <td>c=fit&w=100&h=300<br/> fit模式裁剪</td>
+        <td> <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fit&w=150&h=150" /></td>
+        <td></td>
     </tr>
     <tr>
         <td>fill</td>
-        <td>w:宽(int)<br/>h:高(int)</td>
-        <td>c=fill&w=100&h=300  <br/>保持图片本身的比例，压缩图片尺寸，使其能填充满到100*300的方框，图片的上下或者左右会被裁剪掉。</td>
+        <td>w:宽(int)
+            <br/>h:高(int)</td>
+        <td>c=fill&w=100&h=300<br/>fill模式裁剪</td>
         <td><img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150" /></td>
-        
+        <td></td>
     </tr>
     <tr>
         <td>resize</td>
-        <td>w:宽(int)<br/>h:高(int) </td>
-        <td> c=fill&w=100&h=300 <br/>不保持图片本身的比例，压缩图片尺寸</td>
-        <td><img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=resize&w=150&h=150" /></td>
-        
+        <td>w:宽(int) <br/>h:高(int) </td>
+        <td> c=fill&w=100&h=300 <br/> resize模式裁剪</td>
+        <td> <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=resize&w=150&h=150" /></td>
+        <td></td>
     </tr>
     <tr>
         <td>gamma</td>
         <td>s:强度(float)</td>
         <td>234</td>
         <td><img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=gamma&q=10" /></td>
-        
+        <td></td>
     </tr>
     <tr>
         <td>contrast</td>
         <td>s:强度(int) </td>
-        <td>c=contrast&s=20   增加对比度</td>
-        <td><img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=contrast&s=120" /></td>
-        
+        <td>c=contrast&s=20 增加对比度</td>
+        <td>
+            <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=contrast&s=120" /></td>
+        <td></td>
     </tr>
     <tr>
         <td>brightness</td>
         <td>s:强度(float)</td>
-        <td> c=brightness&s=0.5   增加亮度 </td>
-        <td><img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=brightness&s=38" /></td>
-        
+        <td> c=brightness&s=0.5 增加亮度 </td>
+        <td>
+            <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=brightness&s=38" /></td>
+        <td></td>
     </tr>
     <tr>
         <td>grayscale</td>
         <td>无</td>
-        <td>c=grayscale 变成灰度图  </td>
-        <td><img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=grayscale" /></td>
-        
+        <td>c=grayscale 变成灰度图 </td>
+        <td>
+            <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=grayscale" /></td>
+        <td></td>
     </tr>
     <tr>
         <td>invert</td>
         <td>无</td>
         <td>c=invert 反相 </td>
-        <td><img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=invert" /></td>
-        
+        <td>
+            <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=invert" /></td>
+        <td></td>
     </tr>
     <tr>
         <td>blur</td>
         <td>s:强度(float)</td>
         <td>c=blur&s=3.5</td>
-        <td><img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=blur&s=3.5" /></td>
-        
+        <td>
+            <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=blur&s=3.5" /></td>
+        <td></td>
     </tr>
     <tr>
         <td>sharpen</td>
         <td>s:强度(float)</td>
         <td>c=sharpen&s=3.5 </td>
-        <td><img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=sharpen&s=65" /></td>
-        
+        <td>
+            <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=sharpen&s=65" /></td>
+        <td></td>
     </tr>
     <tr>
         <td>rotate90</td>
         <td>无</td>
         <td>c=rotate90 正向旋转90度 </td>
-        <td><img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=rotate90" /></td>
-        
+        <td>
+            <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=rotate90" /></td>
+        <td></td>
     </tr>
     <tr>
         <td>rotate180</td>
         <td>无</td>
         <td>c=rotate180正向旋转180度</td>
-        <td><img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=rotate180" /></td>
-        
+        <td>
+            <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=rotate180" /></td>
+        <td></td>
     </tr>
     <tr>
         <td>rotate270</td>
         <td>无</td>
         <td>c=rotate270正向旋转270度</td>
-        <td><img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=rotate270" /></td>
-        
+        <td>
+            <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=rotate270" /></td>
+        <td></td>
     </tr>
     <tr>
         <td>flipH</td>
         <td>无</td>
         <td>c=flipH水平翻转</td>
-        <td><img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=flipH" /></td>
-        
+        <td>
+            <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=flipH" /></td>
+        <td></td>
     </tr>
     <tr>
         <td>flipV</td>
         <td>无</td>
         <td>c=flipV水平翻转</td>
-        <td><img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=flipV" /></td>
-        
+        <td>
+            <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=flipV" /></td>
+        <td></td>
     </tr>
     <tr>
         <td>webp</td>
         <td>q:图片质量,可选,默认50(int) </td>
-        <td> c=webp&q=80  用80%的质量输出成webp格式</td>
-        <td><img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=webp&q=80" /></td>
-        
+        <td> c=webp&q=80 用80%的质量输出成webp格式</td>
+        <td>
+            <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=webp&q=80" /></td>
+        <td></td>
     </tr>
     <tr>
         <td>jpeg</td>
         <td>q:图片质量,可选,默认80(int) </td>
-        <td>c=jpeg&q=80  用80%的质量输出成jpeg格式</td>
-        <td><img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=jpeg&q=80" /></td>
-        
+        <td>c=jpeg&q=80 用80%的质量输出成jpeg格式</td>
+        <td>
+            <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=jpeg&q=80" /></td>
+        <td></td>
     </tr>
     <tr>
         <td>png</td>
         <td>无</td>
-        <td>c=png  输出成png格式</td>
-        <td><img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=png" /></td>
-        
+        <td>c=png 输出成png格式</td>
+        <td>
+            <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=png" /></td>
+        <td></td>
     </tr>
     <tr>
         <td>gif</td>
         <td>q:颜色数量</td>
-        <td>c=png&q=128  输出成128色的gif格式</td>
-        <td><img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=gif&q=64" /></td>
+        <td>c=png&q=128 输出成128色的gif格式</td>
+        <td>
+            <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=gif&q=64" /></td>
+        <td></td>
     </tr>
 </table>
