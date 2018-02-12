@@ -202,7 +202,7 @@ http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300
     <tr>
         <td>webp</td>
         <td>q:图片质量,可选,默认50(int) </td>
-        <td> c=webp&q=80 用80%的质量输出成webp格式</td>
+        <td> c=webp&q=80<br/>用80%的质量输出成webp格式</td>
         <td>
             <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=webp&q=80" /></td>
         <td></td>
@@ -210,7 +210,7 @@ http://image.fanqiangti.net/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300
     <tr>
         <td>jpeg</td>
         <td>q:图片质量,可选,默认80(int) </td>
-        <td>c=jpeg&q=80 用80%的质量输出成jpeg格式</td>
+        <td>c=jpeg&q=80<br/>用80%的质量输出成jpeg格式</td>
         <td>
             <img src="http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=jpeg&q=80" /></td>
         <td></td>
