@@ -55,28 +55,58 @@ const uploadhtml =
 
 func UploadMultiHandler(res http.ResponseWriter, req *http.Request)  {
 	if ipPass(req) ==false {
+		res.WriteHeader(http.StatusInternalServerError)
 		io.WriteString(res,"your ip address is forbiden to upload");
 		return
 	}
 
+
+	if Conf.CorsAllow{
+
+		res.Header().Add("Access-Control-Allow-Origin", "*")
+		res.Header().Add(
+			"Access-Control-Allow-Methods",
+			"OPTIONS, HEAD, GET, POST, DELETE",
+		)
+		res.Header().Add(
+			"Access-Control-Allow-Headers",
+			"Content-Type, Content-Range, Content-Disposition",
+		)
+
+		if req.Method==http.MethodOptions{
+			res.WriteHeader(http.StatusOK)
+			io.WriteString(res,"");
+			return
+		}
+	}
+
 	err:=req.ParseMultipartForm(1024);
 	if err!=nil{
+		res.WriteHeader(http.StatusInternalServerError)
 		io.WriteString(res,"error when parse multipart form file"+err.Error());
 		return
 	}
 
 	files:=req.MultipartForm.File["userfile"]
+
+	if len(files)==0{
+		res.WriteHeader(http.StatusBadRequest)
+		io.WriteString(res,"found no image from the form with key userfile");
+		return
+	}
 	var md5List []string
 	for i, _ := range files {
 		tfile,_:=files[i].Open();
 		key,err:=store.storagePut(tfile)
 		if err!=nil{
+			res.WriteHeader(http.StatusInternalServerError)
 			log.Fatalln("error ocurr when store to file",err)
 		}
-		md5List=append(md5List,key);
+		md5List=append(md5List,Conf.ImageUrlPrefix+key);
 	}
 	restring, _ := json.Marshal(md5List);
 	//log.Println(md5List.Len())
+	res.Header().Add("Content-Type","application/json")
 	io.WriteString(res, string(restring))
 }
 
@@ -114,7 +144,7 @@ func UploadBinHandler(res http.ResponseWriter, req *http.Request) {
 	}
 
 	var remap map[string]string
-	remap = map[string]string{"key": key, "msg": "ok"}
+	remap = map[string]string{"key": Conf.ImageUrlPrefix+key, "msg": "ok"}
 	restring, _ := json.Marshal(remap);
 	io.WriteString(res, string(restring))
 }

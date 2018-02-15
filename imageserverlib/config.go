@@ -12,7 +12,7 @@ import (
 
 var Conf Config
 var configPath string
-var accessLog  *log.Logger
+var accessLog *log.Logger
 var store storage
 var sformat = "%-20s%-20s\n"
 
@@ -31,6 +31,8 @@ type Config struct {
 	UploadAllowedInterface []interface{}
 	UploadDeny             []string
 	UploadDenyInterface    []interface{}
+	CorsAllow              bool
+	ImageUrlPrefix         string
 	FileCacheDir           string
 	FileCacheSize          int
 }
@@ -56,6 +58,8 @@ func init() {
 	fmt.Printf(sformat, "Markers:", Conf.Markers)
 	fmt.Printf(sformat, "UploadAllowed:", Conf.UploadAllowed)
 	fmt.Printf(sformat, "UploadDeny:", Conf.UploadDeny)
+	fmt.Printf(sformat, "CorsAllow:", Conf.CorsAllow)
+	fmt.Printf(sformat, "imageUrlPrefix:", Conf.ImageUrlPrefix)
 	fmt.Printf(sformat, "FileCacheDir:", Conf.FileCacheDir)
 	fmt.Printf(sformat, "FileCacheSize:", Conf.FileCacheSize)
 
@@ -98,12 +102,12 @@ func init() {
 			_, _ = os.Create(logfile);
 		}
 
-		file, err := os.OpenFile(logfile, os.O_CREATE | os.O_WRONLY | os.O_APPEND, 0666)
+		file, err := os.OpenFile(logfile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
 			log.Fatalln("Failed to open log file", "output:", err)
 		}
 
-		accessLog = log.New(file, "access: ", log.Ldate | log.Ltime)
+		accessLog = log.New(file, "access: ", log.Ldate|log.Ltime)
 
 		if (Conf.StorageType == "file") {
 			store = initFile(Conf);
