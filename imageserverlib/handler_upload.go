@@ -29,7 +29,7 @@ const uploadhtml =
             {
                 var newItemText=document.createTextNode("Choose file:")
                 var newItemInput=document.createElement("input")
-                newItemInput.name="userfile"
+                newItemInput.name="file"
                 newItemInput.type="file"
                 var addfile=document.getElementById("bt_addfile")
                 var submit=document.getElementById("bt_submit")
@@ -87,7 +87,7 @@ func UploadMultiHandler(res http.ResponseWriter, req *http.Request)  {
 		return
 	}
 
-	files:=req.MultipartForm.File["userfile"]
+	files:=req.MultipartForm.File[Conf.UploadKey]
 
 	if len(files)==0{
 		res.WriteHeader(http.StatusBadRequest)

@@ -33,6 +33,7 @@ type Config struct {
 	UploadDenyInterface    []interface{}
 	CorsAllow              bool
 	ImageUrlPrefix         string
+	UploadKey              string
 	FileCacheDir           string
 	FileCacheSize          int
 }
@@ -60,8 +61,11 @@ func init() {
 	fmt.Printf(sformat, "UploadDeny:", Conf.UploadDeny)
 	fmt.Printf(sformat, "CorsAllow:", Conf.CorsAllow)
 	fmt.Printf(sformat, "imageUrlPrefix:", Conf.ImageUrlPrefix)
+	fmt.Printf(sformat, "uploadKey:", Conf.UploadKey)
 	fmt.Printf(sformat, "FileCacheDir:", Conf.FileCacheDir)
 	fmt.Printf(sformat, "FileCacheSize:", Conf.FileCacheSize)
+
+
 
 	if (Conf.FileCacheSize < 3 || Conf.FileCacheSize > 10000) {
 		Conf.FileCacheSize = 10000
@@ -79,6 +83,11 @@ func init() {
 
 	fmt.Printf(sformat, "UploadAllowedInterface:", Conf.UploadAllowedInterface)
 	fmt.Printf(sformat, "UploadDenyInterface:", Conf.UploadDenyInterface)
+
+
+	if Conf.UploadKey==""{
+		Conf.UploadKey="file"
+	}
 
 	if (len(Conf.Markers) > 0) {
 		for k, v := range Conf.Markers {
