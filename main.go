@@ -14,13 +14,13 @@ func main() {
 	log.SetOutput(os.Stdout)
 	route := mux.NewRouter()
 	upload := plugin.Plugin_upload_cors(lib.UploadHandler(lib.Storage_instance),lib.Conf)
-	route.PathPrefix("/upload").HandlerFunc(upload)
+	route.PathPrefix("/put").HandlerFunc(upload)
 
 
 
 	get := plugin.Plugin_get_filecache(lib.GetHandler(lib.Storage_instance), lib.Conf)
 	get = plugin.Plugin_get_headers(get, lib.Conf)
-	route.PathPrefix("/pic").HandlerFunc(get)
+	route.PathPrefix("/get").HandlerFunc(get)
 	route.HandleFunc("/hello", lib.HelloHandler())
 	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(lib.Conf.Port), route))
 }
