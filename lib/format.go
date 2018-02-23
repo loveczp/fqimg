@@ -11,15 +11,15 @@ import (
 	"github.com/chai2010/webp"
 )
 
-func getQuality(para map[string]string) (int, error) {
-	if v, ok := para["q"]; ok {
-		return strconv.Atoi(v)
-	} else {
-		return 0, nil
+func getQuality(para []string) (int, error) {
+	if len(para)<=1{
+		return 100, nil
+	}else{
+		return strconv.Atoi(para[1])
 	}
 }
 
-func format_jpeg(resp http.ResponseWriter, req *http.Request, img image.Image, para map[string]string) ( error) {
+func format_jpeg(resp http.ResponseWriter, req *http.Request, img image.Image, para []string) ( error) {
 	quality, err := getQuality(para);
 	if err != nil {
 		WriteErr(resp,http.StatusBadRequest, err)
@@ -47,13 +47,13 @@ func format_jpeg(resp http.ResponseWriter, req *http.Request, img image.Image, p
 	return  nil
 }
 
-func format_png(resp http.ResponseWriter, req *http.Request, img image.Image, para map[string]string) (error) {
+func format_png(resp http.ResponseWriter, req *http.Request, img image.Image, para []string) (error) {
 	resp.Header().Add("content-type", "image/png")
 	err := png.Encode(resp, img)
 	return err
 }
 
-func format_gif(resp http.ResponseWriter, req *http.Request, img image.Image, para map[string]string) (error) {
+func format_gif(resp http.ResponseWriter, req *http.Request, img image.Image, para []string) (error) {
 	quality, err := getQuality(para);
 	if err != nil {
 		WriteErr(resp,http.StatusBadRequest, err)
@@ -67,7 +67,7 @@ func format_gif(resp http.ResponseWriter, req *http.Request, img image.Image, pa
 	return nil
 }
 
-func format_bmp(resp http.ResponseWriter, req *http.Request, img image.Image, para map[string]string) (error) {
+func format_bmp(resp http.ResponseWriter, req *http.Request, img image.Image, para []string) (error) {
 	resp.Header().Add("content-type", "image/bmp")
 	err := bmp.Encode(resp, img)
 	if err!=nil{
@@ -75,7 +75,7 @@ func format_bmp(resp http.ResponseWriter, req *http.Request, img image.Image, pa
 	}
 	return nil
 }
-func format_webp(resp http.ResponseWriter, req *http.Request, img image.Image, para map[string]string) (error) {
+func format_webp(resp http.ResponseWriter, req *http.Request, img image.Image, para []string) (error) {
 	quality, err := getQuality(para);
 	if err != nil {
 		WriteErr(resp,http.StatusBadRequest, err)

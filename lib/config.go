@@ -40,7 +40,7 @@ type Config struct {
 
 var markHash = make(map[string]image.Image)
 
-func init() {
+func InitConfig() {
 
 	sformat := "%-30s%-20s\n"
 	flag.StringVar(&configPath, "c", "./config.conf", "config file path")

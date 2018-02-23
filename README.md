@@ -19,14 +19,14 @@ http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27
 
 动态剪裁的例子
 动态剪裁成400*400的图如下，当然高宽值可以设置成我们需要的任意值
-http://image.fanqiangti.net/2830dfa89daaf37b13c3421b7807df27?c=fill&w=400&h=400
+http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fill&w=400&h=400
 
 链式处理的例子
 可以把图片裁剪成400*400后，还可以进行灰度处理。如下
-<a href="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fit&w=200&h=300|c=grayscale">http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fit&w=200&h=300|c=grayscale</a>
+<a href="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fit=200_300&grayscale">http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fit=200_300&grayscale</a>
 
 webp处理的例子。如下
-http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=webp&q=50
+http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?webp=50
 
 
 
@@ -60,7 +60,9 @@ fqimg -c=path/to/config/file
 curl  --data-binary @test.jpg "http://image.fanqiangti.net/put"
 其中test.jpg是需要上传的文件，这个对应于http中的binary的post上传，windows平台下可以用postman来模拟。
 可以得到如下结果。
-{"md5":"2830dfa89daaf37b13c3421b7807df27","msg":"ok"}
+<br><br>
+["http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27"]
+<br><br>
 md5就是文件对应的MD5码，系统也是用这个来定位上传的文件。
 
 访问该文件方法如下
@@ -71,21 +73,24 @@ http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27
 <li>每一个图片操作就是一个处理命令，命令有0个或者多个参数，参数包含参数名和参数值。参数是以url的参数的方式放在url尾部。即？后面就是参数。
 命令名称用c表示，命令的值在下面的表中找。
 例如
-http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fit&w=200&h=300
+http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fit=200_300
 上面的命令表示对图片进行压缩，使图片能够容纳在一个200*300的框内。命令本身参数名是c，值是fit。fit命令包含两个参数h，w分别表示高和宽。
 </li>
 <li>
 命令之间可以通过管道链接符号“|”把多个命令连接起来实现多重操作。
 例如
-<a href="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fit&w=200&h=300|c=grayscale">http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fit&w=200&h=300|c=grayscale</a>
+<a href="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fit=200_300&grayscale">http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fit=200_300&grayscale</a>
 上面表示先推图像进行fit压缩操作，然后对操作后的结果进行灰度化 处理。
 </li>
 <ul>
 
 
 <h1>开发注意事项</h1>
-因为需要支持webp，所以使用了github.com/chai2010/webp 这个webp库，
-在<bold>windows</blod>上需要mingw的支持，请下载
+<ul>
+<li>因为需要支持webp，所以使用了github.com/chai2010/webp 这个webp库。在<bold>windows</blod>上需要mingw的支持，请下载</li>
+<li>go 版本必须大于等于1.8</li>
+<ul>
+
 
 
 
@@ -94,152 +99,158 @@ http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fit&w=200&h=3
 <table>
     <tr>
         <td>fit</td>
-        <td>w:宽(int)
-            <br/>h:高(int)</td>
-        <td>c=fit&w=100&h=300<br/> fit模式裁剪</td>
-        <td> <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fit&w=150&h=150" /></td>
+        <td> fit=width_height<br>fit=width_height_filter</td>
+        <td>fit=100_300<br/>fit=100_300_box<br> fit模式裁剪</td>
+        <td> <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fit=150_150" /></td>
         <td></td>
     </tr>
     <tr>
         <td>fill</td>
-        <td>w:宽(int)
-            <br/>h:高(int)</td>
-        <td>c=fill&w=100&h=300<br/>fill模式裁剪</td>
-        <td><img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150" /></td>
+        <td>fill=width_height<br>fill=width_height_filter<br>fill=width_height_filter_anchor</td>
+        <td>fill=100_300<br/>fill=100_300_box<br/>fill=100_300_box_top<br>fill模式裁剪</td>
+        <td><img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150" /></td>
         <td></td>
     </tr>
     <tr>
         <td>resize</td>
-        <td>w:宽(int) <br/>h:高(int) </td>
-        <td> c=fill&w=100&h=300 <br/> resize模式裁剪</td>
-        <td> <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=resize&w=150&h=150" /></td>
+        <td>resize=width_height<br>resize=width_height_filter</td>
+        <td>resize=100_300<br/>resize=100_300_box<br>  resize模式裁剪</td>
+        <td> <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?resize=150_150" /></td>
         <td></td>
     </tr>
     <tr>
         <td>gamma</td>
-        <td>s:强度(float)</td>
-        <td>234</td>
-        <td><img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=gamma&q=10" /></td>
+        <td>gamma<br>gamma=stength</td>
+        <td>gamma<br>gamma=234</td>
+        <td><img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150&gamma=10" /></td>
         <td></td>
     </tr>
     <tr>
         <td>contrast</td>
-        <td>s:强度(int) </td>
-        <td>c=contrast&s=20 增加对比度</td>
+        <td>contrast<br>contrast=stength</td>
+        <td>contrast<br>contrast=20<br> 增加对比度</td>
         <td>
-            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=contrast&s=120" /></td>
+            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150&contrast=120" /></td>
         <td></td>
     </tr>
     <tr>
         <td>brightness</td>
-        <td>s:强度(float)</td>
-        <td> c=brightness&s=0.5 增加亮度 </td>
+        <td>brightness<br>brightness=stength</td>
+        <td> brightness<br>brightness=0.5<br>增加亮度 </td>
         <td>
-            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=brightness&s=38" /></td>
+            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150&brightness=38" /></td>
         <td></td>
     </tr>
     <tr>
         <td>grayscale</td>
-        <td>无</td>
-        <td>c=grayscale 变成灰度图 </td>
+        <td>grayscale</td>
+        <td>grayscale<br>变成灰度图 </td>
         <td>
-            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=grayscale" /></td>
+            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150&grayscale" /></td>
         <td></td>
     </tr>
     <tr>
         <td>invert</td>
-        <td>无</td>
-        <td>c=invert 反相 </td>
+        <td>invert</td>
+        <td>invert<br>反相 </td>
         <td>
-            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=invert" /></td>
+            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150&invert" /></td>
         <td></td>
     </tr>
     <tr>
         <td>blur</td>
-        <td>s:强度(float)</td>
-        <td>c=blur&s=3.5</td>
+        <td>blur<br>blur=stength</td>
+        <td>blur<br>blur=3.5<br>模糊</td>
         <td>
-            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=blur&s=3.5" /></td>
+            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150&blur=3.5" /></td>
         <td></td>
     </tr>
     <tr>
         <td>sharpen</td>
-        <td>s:强度(float)</td>
-        <td>c=sharpen&s=3.5 </td>
+        <td>sharpen<br>sharpen=stength</td>
+        <td>sharpen<br>sharpen=3.5<br>锐化</td>
         <td>
-            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=sharpen&s=65" /></td>
+            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150&sharpen=65" /></td>
         <td></td>
     </tr>
     <tr>
         <td>rotate90</td>
-        <td>无</td>
-        <td>c=rotate90 正向旋转90度 </td>
+        <td>rotate90</td>
+        <td>rotate90 正向旋转90度 </td>
         <td>
-            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=rotate90" /></td>
+            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150&rotate90" /></td>
         <td></td>
     </tr>
     <tr>
         <td>rotate180</td>
-        <td>无</td>
-        <td>c=rotate180正向旋转180度</td>
+        <td>rotate180</td>
+        <td>rotate180正向旋转180度</td>
         <td>
-            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=rotate180" /></td>
+            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150&rotate180" /></td>
         <td></td>
     </tr>
     <tr>
         <td>rotate270</td>
-        <td>无</td>
-        <td>c=rotate270正向旋转270度</td>
+        <td>rotate270</td>
+        <td>rotate270正向旋转270度</td>
         <td>
-            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=rotate270" /></td>
+            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150&rotate270" /></td>
         <td></td>
     </tr>
     <tr>
         <td>flipH</td>
-        <td>无</td>
-        <td>c=flipH水平翻转</td>
+        <td>flipH</td>
+        <td>flipH水平翻转</td>
         <td>
-            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=flipH" /></td>
+            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150&flipH" /></td>
         <td></td>
     </tr>
     <tr>
         <td>flipV</td>
-        <td>无</td>
-        <td>c=flipV水平翻转</td>
+        <td>flipV</td>
+        <td>flipV水平翻转</td>
         <td>
-            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=flipV" /></td>
+            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150&flipV" /></td>
         <td></td>
     </tr>
     <tr>
         <td>webp</td>
-        <td>q:图片质量<br/>可选,默认50(int) </td>
-        <td> c=webp&q=80<br/>用80%的质量输出成webp格式</td>
+        <td>webp<br>webp=quality</td>
+        <td> webp<br>webp=80<br/>用80%的质量输出成webp格式</td>
         <td>
-            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=webp&q=80" /></td>
+            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150&webp=80" /></td>
         <td></td>
     </tr>
     <tr>
         <td>jpeg</td>
-        <td>q:图片质量<br/>可选,默认80(int) </td>
-        <td>c=jpeg&q=80<br/>用80%的质量输出成jpeg格式</td>
+        <td>jpeg<br>jpeg=quality</td>
+        <td>jpeg<br>jpeg=80<br/>用80%的质量输出成jpeg格式</td>
         <td>
-            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=jpeg&q=80" /></td>
+            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150&jpeg=80" /></td>
         <td></td>
     </tr>
     <tr>
         <td>png</td>
-        <td>无</td>
-        <td>c=png 输出成png格式</td>
+        <td>png</td>
+        <td>png 输出成png格式</td>
         <td>
-            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=png" /></td>
+            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150&png" /></td>
         <td></td>
     </tr>
     <tr>
         <td>gif</td>
-        <td>q:颜色数量</td>
-        <td>c=png&q=128 输出成128色的gif格式</td>
+        <td>gif<br>gif=num<br>num为颜色数量</td>
+        <td>png<br>png=128<br> 输出成128色的gif格式</td>
         <td>
-            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?c=fill&w=150&h=150|c=gif&q=64" /></td>
+            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150&gif=64" /></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>mark</td>
+        <td>mark=mid<br>mark=mid_offx_offy<br>mark=mid_offx_offy_offp<br>mark=mid_offx_offy_offp_alpha<br>加水印 mid为配置文件中mark部分左边的key</td>
+        <td>mark=a<br>mark=a_10_10<br>mark=a_10_10_lu<br>mark=a_10_10_lu_255</td>
+        <td>
+            <img src="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150&mark=a" /></td>
         <td></td>
     </tr>
 </table>

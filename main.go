@@ -11,6 +11,7 @@ import (
 )
 
 func main() {
+	lib.InitConfig()
 	log.SetOutput(os.Stdout)
 	route := mux.NewRouter()
 	upload := plugin.Plugin_upload_cors(lib.UploadHandler(lib.Storage_instance),lib.Conf)

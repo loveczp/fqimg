@@ -6,18 +6,16 @@ import (
 	"net/http"
 	"image"
 	"io"
-	"container/list"
 	"github.com/deckarep/golang-set"
 	"github.com/loveczp/fqimg/store"
 	"fmt"
-	"github.com/pkg/errors"
 	"net/url"
 	"log"
 )
 
 var (
 	cmds    mapset.Set
-	cmd_map = map[string]func(para map[string]string, in image.Image) (image.Image, error){
+	cmd_map = map[string]func(para []string, in image.Image) (image.Image, error){
 		"fit":        cmd_fit,
 		"fill":       cmd_fill,
 		"resize":     cmd_resize,
@@ -36,7 +34,7 @@ var (
 		"flipV":      cmd_flipV,
 		"transpose":  cmd_transpose,
 		"mark":       cmd_mark}
-	format_map = map[string]func(resp http.ResponseWriter, req *http.Request, img image.Image, para map[string]string) (error){
+	format_map = map[string]func(resp http.ResponseWriter, req *http.Request, img image.Image, para []string) (error){
 		"jpeg": format_jpeg,
 		"png":  format_png,
 		"gif":  format_gif,
@@ -57,7 +55,7 @@ func init() {
 func GetHandler(store store.Storage) http.HandlerFunc {
 	return func(resp http.ResponseWriter, req *http.Request) {
 		key := req.URL.Path[1:]
-		key = strings.TrimPrefix(key, getAlias+"/")
+		key = strings.TrimPrefix(key, "get/")
 		var outImage image.Image
 		reader, err := store.Get(key);
 		if err != nil {
@@ -70,79 +68,61 @@ func GetHandler(store store.Storage) http.HandlerFunc {
 			return
 		}
 		ops, format_para, err := getCommands(req)
-		//log.Println("ops:",ops)
 		if err != nil {
 			WriteErr(resp, http.StatusBadRequest, err)
 		}
 
-		if (ops.Len() == 0) {
-			imaging.Encode(resp, outImage, imaging.JPEG)
-			return
-		}
-
-		for e := ops.Front(); e != nil; e = e.Next() {
-			para, _ := e.Value.(map[string]string)
-			command := para["c"]
-			outImage, err = cmd_map[command](para, outImage);
+		for _,value:=range(ops) {
+			outImage, err = cmd_map[value[0]](value, outImage);
 			if err != nil {
 				WriteErr(resp, http.StatusBadRequest, err)
 				return
 			}
 		}
 
-		format_cmd, ok := format_para["c"]
-		//fmt.Println("format_cmd",format_cmd)
-		if ok == false {
-			format_cmd = "jpeg"
-			format_para["c"] = "jpeg"
+		if len(format_para)==0 {
+			format_para=append(format_para, "jpeg")
 		}
-		format_map[format_cmd](resp, req, outImage, format_para)
+		format_map[format_para[0]](resp, req, outImage, format_para)
 		return
 	}
 }
 
-func getCommands(req *http.Request) (*list.List, map[string]string, error) {
-	raw_query := req.URL.RawQuery;
-	query, err := url.PathUnescape(raw_query)
-	if err != nil {
-		return nil, nil, errors.New(fmt.Sprintf("the query %s format is wrong", raw_query))
+func getCommands(req *http.Request) ([][]string,[]string , error) {
+	raw_querry, err := url.PathUnescape(req.URL.RawQuery)
+	if err!=nil{
+		return nil,nil,err
 	}
-	log.Println("query:", query)
-	if len(query) == 0 && len(Conf.DefaultAction) > 2 {
-		query = Conf.DefaultAction;
-	}
-	ops := list.New()
-	opts := strings.Split(query, "|")
-	formatpara := map[string]string{}
-	for i := 0; i < len(opts); i++ {
-		paraString := strings.TrimSpace(opts[i])
-		if (len(paraString) < 1) {
-			break
-		}
-		paramap := map[string]string{}
-		paras := strings.Split(paraString, "&")
-		for j := 0; j < len(paras); j++ {
-			pairArray := strings.Split(paras[j], "=")
 
-			if (len(paras[j]) < 1 || len(pairArray) != 2) {
-				return nil, nil, errors.New(fmt.Sprintf("the parameter %s format is wrong", paras[j]))
+	log.Println(raw_querry)
+	querry_arr:=parseQueryString(raw_querry)
+	log.Println(querry_arr)
+
+	re_cmds :=[][]string{}
+	re_format:=[]string{}
+	for _,value:=range(querry_arr) {
+		cmd:=[]string{}
+		cmd=append(cmd,value[0])
+		if len(value)>1{
+			paraString := strings.TrimSpace(value[1])
+			if (len(paraString) < 1) {
+				break
 			}
-			paramap[pairArray[0]] = pairArray[1]
-		}
-		incom, ok := paramap["c"]
-		if (ok && cmds.Contains(incom) == false) {
-			return nil, nil, errors.New(fmt.Sprintf("the commond %s is not available", incom))
-		}
-
-		if _, ok := cmd_map[incom]; ok {
-			ops.PushBack(paramap)
+			values:=strings.Split(paraString,"_")
+			log.Println(values)
+			cmd=append(cmd,values...)
+			log.Println(cmd)
 		}
 
-		if _, ok := format_map[incom]; ok {
-			formatpara = paramap
+		if _,ok:=cmd_map[value[0]];ok{
+			re_cmds=append(re_cmds,cmd)
+		}
+		if _,ok:=format_map[value[0]];ok{
+			re_format=cmd
 		}
 	}
-	return ops, formatpara, nil
+	log.Println(re_cmds, re_format)
+	return re_cmds, re_format, nil
 }
 
 func HelloHandler() http.HandlerFunc {
