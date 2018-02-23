@@ -94,9 +94,7 @@ func getCommands(req *http.Request) ([][]string,[]string , error) {
 		return nil,nil,err
 	}
 
-	log.Println(raw_querry)
 	querry_arr:=parseQueryString(raw_querry)
-	log.Println(querry_arr)
 
 	re_cmds :=[][]string{}
 	re_format:=[]string{}
@@ -109,9 +107,7 @@ func getCommands(req *http.Request) ([][]string,[]string , error) {
 				break
 			}
 			values:=strings.Split(paraString,"_")
-			log.Println(values)
 			cmd=append(cmd,values...)
-			log.Println(cmd)
 		}
 
 		if _,ok:=cmd_map[value[0]];ok{
@@ -121,13 +117,11 @@ func getCommands(req *http.Request) ([][]string,[]string , error) {
 			re_format=cmd
 		}
 	}
-	log.Println(re_cmds, re_format)
 	return re_cmds, re_format, nil
 }
 
 func HelloHandler() http.HandlerFunc {
 	return func(resp http.ResponseWriter, req *http.Request) {
-		fmt.Println("hello resp")
 		io.WriteString(resp, "hello")
 	}
 }
