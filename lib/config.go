@@ -11,9 +11,12 @@ import (
 	"github.com/loveczp/fqimg/store"
 )
 
-var Conf Config
-var configPath string
-var Storage_instance store.Storage
+var (
+	Conf             Config
+	configPath       string
+	Storage_instance store.Storage
+	getAlias         = "get"
+)
 
 type Config struct {
 	StorageType           string

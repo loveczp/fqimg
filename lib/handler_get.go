@@ -57,7 +57,7 @@ func init() {
 func GetHandler(store store.Storage) http.HandlerFunc {
 	return func(resp http.ResponseWriter, req *http.Request) {
 		key := req.URL.Path[1:]
-		key = strings.TrimPrefix(key, "pic/")
+		key = strings.TrimPrefix(key, getAlias+"/")
 		var outImage image.Image
 		reader, err := store.Get(key);
 		if err != nil {

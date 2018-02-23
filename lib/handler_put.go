@@ -31,7 +31,7 @@ func UploadHandler(store store.Storage) http.HandlerFunc {
 				res.WriteHeader(http.StatusInternalServerError)
 				log.Fatalln("error ocurr when store to file", err)
 			}
-			md5List = append(md5List, Conf.ImageUrlPrefix+"put/"+key);
+			md5List = append(md5List, Conf.ImageUrlPrefix+ getAlias+"/"+key);
 		}
 		restring, _ := json.Marshal(md5List);
 		res.Header().Add("Content-Type", "application/json")
