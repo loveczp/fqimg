@@ -13,7 +13,7 @@
 #如果只想使用本地文件作为存储目标，解开这个部分的注释，同时给“fastdfs”和“weed”加上注释
 #注意，这种配置下，只能使用单台服务器的存储能力，一般是TB以内，但对于绝大多数网站而言，这已经足够
 storageType = "file"
-fileDir = "/var/go_image_server/"
+fileDir = "/var/fqimg/data/"
 
 
 
@@ -42,7 +42,7 @@ port=12345
 
 #custom favorite icon
 #自定义网站的 favorite icon
-faviconPath="./favicon.ico"
+#faviconPath="./favicon.ico"
 
 
 
@@ -53,17 +53,12 @@ faviconPath="./favicon.ico"
 #defaultAction="c=fit&w=800&h=800|c=jpeg&q=70"
 
 
-
-#log file location 
-logDir= "/var/go_image_server/"
-
-
 #local file cache put here, this should be set always set 
 # it can improve performace by great magnitude   maybe  50 times faster
 #图片服务器缓存配置。
 #图片的动态操作非常慢，缓存是把操作之后的结果缓存在某个目录
 #这个非常重要，设置这个，可以是使性能得到几十倍的提高
-fileCacheDir= "/var/go_image_server/fileCaceh/"
+fileCacheDir= "/var/fqimg/file_cache/"
 fileCacheSize=10000
 
 
@@ -82,7 +77,7 @@ uploadKey="file"
 #自定义http请求头部
 [headers]
 Cache-Control="max-age=9999999"
-server="go_image_server"
+Server="fqimg"
 
 
 
@@ -90,6 +85,6 @@ server="go_image_server"
 #水印文件存放这里
 #water markers  put here
 #[markers]
-#a="./markers/a.jpg"
+#a="D:\\app\\gopath\\src\\github.com\\loveczp\\fqimg\\mark.png"
 #b="./markers/b.jpg"
 #c="./markers/c.jpg"
