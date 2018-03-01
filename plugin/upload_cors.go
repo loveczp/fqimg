@@ -6,10 +6,9 @@ import (
 	"io"
 )
 
-func Plugin_upload_cors(h http.HandlerFunc, conf lib.Config) http.HandlerFunc {
+func Plugin_upload_cors(h http.HandlerFunc) http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		if conf.CorsAllow {
-
+		if lib.Conf.CorsAllow {
 			writer.Header().Add("Access-Control-Allow-Origin", "*")
 			writer.Header().Add(
 				"Access-Control-Allow-Methods",

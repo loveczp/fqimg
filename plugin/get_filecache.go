@@ -10,6 +10,53 @@ import (
 	"github.com/loveczp/fqimg/lib"
 )
 
+func Plugin_get_filecache(h http.HandlerFunc) http.HandlerFunc {
+	var fileCache *(lru.Cache)
+	if fileCache == nil {
+		var err error;
+		fileCache, err = lru.NewWithEvict(lib.Conf.FileCacheSize, removeFile)
+		if err != nil {
+			log.Panic("cache create error :", err)
+		}
+	}
+
+	if lib.Conf.FileCacheDir != "" {
+		os.MkdirAll(lib.Conf.FileCacheDir, 0777);
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		if lib.Conf.FileCacheDir != "" {
+			if item, ok := (*fileCache).Get(r.URL.String()); ok {
+				citem := item.(imageCacheItem)
+				if cfile, err := os.Open(citem.filePath); err == nil {
+					io.Copy(w, cfile);
+					log.Println("data from file cache:", r.URL.String());
+					defer cfile.Close()
+					return;
+				} else {
+					(*fileCache).Remove(r.URL.String())
+					log.Println("data error from file cache:", r.URL.String());
+					h.ServeHTTP(w, r)
+				}
+			} else {
+				cPath := lib.Conf.FileCacheDir + base64.StdEncoding.EncodeToString([]byte(r.URL.String()));
+				var tempFile *(os.File)
+				if _, err := os.Stat(cPath); !os.IsExist(err) {
+					tempFile, err = os.Create(cPath);
+					defer (*tempFile).Close()
+				}
+				log.Println("cache set data , key ", r.URL.String())
+				citem := imageCacheItem{filePath: cPath, key: r.URL.String()}
+				(*fileCache).Add(r.URL.String(), citem)
+				mw := newFileResponseWriter(tempFile, w)
+				h.ServeHTTP(mw, r)
+			}
+		} else {
+			h.ServeHTTP(w, r)
+		}
+	}
+}
+
 type fileResponseWriter struct {
 	file  io.Writer
 	resp  http.ResponseWriter
@@ -48,7 +95,6 @@ func removeFile(key interface{}, value interface{}) {
 	citem := value.(imageCacheItem)
 	log.Println("romve cache item :", citem.key);
 	go func(filePath string) {
-		//log.Println("romve cache item go routin in :",filePath);
 		if _, err := os.Stat(filePath); err == nil {
 			err := os.Remove(filePath)
 			if err != nil {
@@ -59,47 +105,4 @@ func removeFile(key interface{}, value interface{}) {
 		}
 
 	}(citem.filePath)
-}
-
-func Plugin_get_filecache(h http.HandlerFunc, conf lib.Config) http.HandlerFunc {
-	var fileCache *(lru.Cache)
-	if fileCache == nil {
-		var err error;
-		fileCache, err = lru.NewWithEvict(conf.FileCacheSize, removeFile)
-		if err != nil {
-			log.Panic("cache create error :", err)
-		}
-	}
-
-	if len(conf.FileCacheDir) > 2 {
-		os.MkdirAll(conf.FileCacheDir, 0777);
-	}
-
-	return func(w http.ResponseWriter, r *http.Request) {
-		if item, ok := (*fileCache).Get(r.URL.String()); ok {
-			citem := item.(imageCacheItem)
-			if cfile, err := os.Open(citem.filePath); err == nil {
-				io.Copy(w, cfile);
-				log.Println("data from file cache:", r.URL.String());
-				defer cfile.Close()
-				return;
-			} else {
-				(*fileCache).Remove(r.URL.String())
-				log.Println("data error from file cache:", r.URL.String());
-				h.ServeHTTP(w, r)
-			}
-		} else {
-			cPath := conf.FileCacheDir + base64.StdEncoding.EncodeToString([]byte(r.URL.String()));
-			var tempFile *(os.File)
-			if _, err := os.Stat(cPath); !os.IsExist(err) {
-				tempFile, err = os.Create(cPath);
-				defer (*tempFile).Close()
-			}
-			log.Println("cache set data , key ", r.URL.String())
-			citem := imageCacheItem{filePath: cPath, key: r.URL.String()}
-			(*fileCache).Add(r.URL.String(), citem)
-			mw := newFileResponseWriter(tempFile, w)
-			h.ServeHTTP(mw, r)
-		}
-	}
 }

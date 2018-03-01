@@ -36,10 +36,16 @@ fileDir = "/var/fqimg/data"
 #fastdfsConfigFilePath="D:\\work\\go_image_server\\main\\fastdfs.conf"
 
 
+#listen=
 
 #http port
 #http端口
-port=12345
+httpPort=12345
+
+#if this value set https vill be open
+#httpsPort=10443
+#httpsPublicKeyPath=/abc/123
+#httpsPrivateKeyPath=/abc/456
 
 
 #custom favorite icon
@@ -60,28 +66,30 @@ port=12345
 #图片服务器缓存配置。
 #图片的动态操作非常慢，缓存是把操作之后的结果缓存在某个目录
 #这个非常重要，设置这个，可以是使性能得到几十倍的提高
-fileCacheDir= "/var/fqimg/file_cache/"
+fileCacheDir= "/var/fqimg/cache/"
 fileCacheSize=10000
-
+getForceAction="mark=a"
 
 
 #access control put here , but  uploadDeny   and  uploadAllowed can only set one
 #can be  ip address or  CIDR  format network
 #上传控制，允许或禁止只能设置一个，不能同时设置。
 #设置的值可以是单独的IP地址，或者是CIDR网段
-#uploadAllowed=["192.168.1.1/16"]
-#uploadDeny=["127.0.0.1","192.168.76.200"]
+#uploadIpAllowed=["192.168.1.1/16"]
+#uploadIpDeny=["127.0.0.1","192.168.76.200"]
+#uploadIpLookups=["RemoteAddr", "X-Forwarded-For", "X-Real-IP"]
 corsAllow=true
 imageUrlPrefix="http://127.0.0.1:12345/"
 uploadKey="file"
-
+#每个文件的大小限制，kb为单位
+uploadFileSizeLimit=2048
+#每次上传的文件数量限制，最大值为该值
+uploadFileNmuLimit=1
 #custom http headers  put here
 #自定义http请求头部
 [headers]
 Cache-Control="max-age=9999999"
 Server="fqimg"
-
-
 
 
 #水印文件存放这里

@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"github.com/loveczp/fqimg/store"
 	"github.com/pkg/errors"
+	"strconv"
 )
 
 func UploadHandler(store store.Storage) http.HandlerFunc {
@@ -23,9 +24,23 @@ func UploadHandler(store store.Storage) http.HandlerFunc {
 			WriteErr(res, http.StatusBadRequest, errors.New("found no image from the form with key:"+Conf.UploadKey))
 			return
 		}
+
+		if len(files)>Conf.UploadFileNmuLimit{
+			WriteErr(res, http.StatusBadRequest, errors.New("number of uploaded file exceed the limit :"+strconv.Itoa(Conf.UploadFileNmuLimit)))
+			return
+		}
+
+		for _,f := range files {
+			if f.Size > int64(Conf.UploadFileNmuLimit*1024){
+				WriteErr(res, http.StatusBadRequest, errors.New("size of uploaded file exceed the limit :"+strconv.Itoa(Conf.UploadFileNmuLimit)+"kb"))
+				return
+			}
+		}
+
+
 		var md5List []string
-		for i, _ := range files {
-			tfile, _ := files[i].Open();
+		for _,f := range files {
+			tfile, _ := f.Open();
 			key, err := store.Put(tfile)
 			if err != nil {
 				res.WriteHeader(http.StatusInternalServerError)
@@ -33,6 +48,8 @@ func UploadHandler(store store.Storage) http.HandlerFunc {
 			}
 			md5List = append(md5List, Conf.ImageUrlPrefix+ getAlias+"/"+key);
 		}
+
+
 		restring, _ := json.Marshal(md5List);
 		res.Header().Add("Content-Type", "application/json")
 		io.WriteString(res, string(restring))
