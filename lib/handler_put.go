@@ -31,8 +31,8 @@ func UploadHandler(store store.Storage) http.HandlerFunc {
 		}
 
 		for _,f := range files {
-			if f.Size > int64(Conf.UploadFileNmuLimit*1024){
-				WriteErr(res, http.StatusBadRequest, errors.New("size of uploaded file exceed the limit :"+strconv.Itoa(Conf.UploadFileNmuLimit)+"kb"))
+			if f.Size > int64(Conf.UploadFileSizeLimit*1024){
+				WriteErr(res, http.StatusBadRequest, errors.New("size of uploaded file exceed the limit :"+strconv.Itoa(Conf.UploadFileSizeLimit)+"kb"))
 				return
 			}
 		}
