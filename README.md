@@ -252,7 +252,7 @@ http://fqimg.com/get/2830dfa89daaf37b13c3421b7807df27?fit=200_300
         <td>mark=mid<br>mark=mid_offx_offy<br>mark=mid_offx_offy_offp<br>mark=mid_offx_offy_offp_alpha<br>加水印 mid为配置文件中mark部分左边的key</td>
         <td>mark=a<br>mark=a_10_10<br>mark=a_10_10_lu<br>mark=a_10_10_lu_255</td>
         <td>
-            <img src="http://fqimg.com/get/2830dfa89daaf37b13c3421b7807df27?fill=150_150&mark=a" /></td>
+            <img src="http://fqimg.com/get/2830dfa89daaf37b13c3421b7807df27?fill=150_151&mark=a" /></td>
         <td></td>
     </tr>
 </table>
