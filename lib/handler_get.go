@@ -119,8 +119,3 @@ func getCommands(req *http.Request) ([][]string, []string, error) {
 	return re_cmds, re_format, nil
 }
 
-func HelloHandler() http.HandlerFunc {
-	return func(resp http.ResponseWriter, req *http.Request) {
-		io.WriteString(resp, "hello:"+strconv.Itoa(h))
-	}
-}
