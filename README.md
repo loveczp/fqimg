@@ -1,5 +1,10 @@
 <h1>FQimg</h1>
 这是一个用go语言写的实时图片服务器
+<p>
+<h1 style="">这是个极其简单的测试页面,先来体验一下把<br>
+<a href="http://fqimg.com/web/">fqimg.com/web/</a></h1>
+</p>
+
 有如下特性
 <ol>
 <li>动态处理图片。在请求的url上加上不同的尺寸参数就可以得到不同的尺寸的图片。</li>
@@ -68,9 +73,7 @@ md5就是文件对应的MD5码，系统也是用这个来定位上传的文件�
 访问该文件方法如下
 http://fqimg.com/get/2830dfa89daaf37b13c3421b7807df27
 
-<p>
-这里有个极其简单的测试页面<a href="http://fqimg.com/web/">fqimg.com/web 去往测试页面玩耍</a>
-</p>
+
 
 <h2>3.图片操作</h2>
 <ul>
