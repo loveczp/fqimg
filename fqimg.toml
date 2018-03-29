@@ -35,11 +35,6 @@ fileDir = "/var/fqimg/data"
 #storageType="fastdfs"
 #fastdfsConfigFilePath="D:\\work\\go_image_server\\main\\fastdfs.conf"
 
-
-#listen=
-
-#http port
-#http端口
 httpPort=12345
 
 #if this value set https vill be open

@@ -59,10 +59,7 @@ fqimg -c=path/to/config/file
 
 <h2>2.图片上传</h2>
 curl -F "file=@xxxxx.jpg" "http://fqimg.com/put"
-把xxxx.jpg和fqimg.com换成你对应的信息
-
-其中test.jpg是需要上传的文件，这个对应于http中的binary的post上传，windows平台下可以用postman来模拟。
-可以得到如下结果。
+把xxxx.jpg和fqimg.com换成你对应的信息可以得到如下结果。
 <br><br>
 ["http://fqimg.com/get/2830dfa89daaf37b13c3421b7807df27"]
 <br><br>
@@ -70,6 +67,10 @@ md5就是文件对应的MD5码，系统也是用这个来定位上传的文件�
 
 访问该文件方法如下
 http://fqimg.com/get/2830dfa89daaf37b13c3421b7807df27
+
+<p>
+这里有个极其简单的测试页面<a href="http://fqimg.com/web">fqimg.com/web 去往测试页面玩耍</a>
+</p>
 
 <h2>3.图片操作</h2>
 <ul>
