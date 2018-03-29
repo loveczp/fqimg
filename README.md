@@ -10,6 +10,7 @@
 <li>支持多种输出格式和输出质量。当前能够支持jpeg，gif，png，bmp，webp格式，对于jpeg，gif，webp还能够支持自定义输出图片质量。</li>
 <li>支持本地文件缓存，极大提高性能。</li>
 <li>支持上传控制，确保只有可信IP才能上传。</li>
+<li>支持跨域上传。</li>
 <li>支持三种存储后端，本地文件，<a href="http://image.fanqiangti.net/get/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale">fastdfs</a>，<a href="https://github.com/chrislusf/seaweedfs">seaweeddfs</a></li>
 </ol>
 
