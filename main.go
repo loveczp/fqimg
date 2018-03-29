@@ -27,7 +27,6 @@ func main() {
 	get = plugin.Plugin_get_headers(get)
 	get = plugin.Plugin_get_filecache(get)
 	route.PathPrefix("/get").HandlerFunc(get)
-	route.HandleFunc("/hello", lib.HelloHandler())
 	//log.Fatal(http.ListenAndServeTLS(":10443", "cert.pem", "key.pem", nil))
 	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(lib.Conf.HttpPort), route))
 }
