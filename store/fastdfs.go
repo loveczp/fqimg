@@ -3,7 +3,6 @@ package store
 import (
 	"io"
 	"fmt"
-	"errors"
 	"github.com/weilaihui/fdfs_client"
 	"os"
 	"strconv"
@@ -69,9 +68,7 @@ func (fast FastStore) Get(key string) (io.Reader, error) {
 func InitFast(fastPath string) (FastStore, error) {
 	//hasUrl := config.Get("fastdfs.config_file_path")
 	if (fastPath == "") {
-		panic("fastdfs.configPath does not exsit!")
-		return FastStore{}, errors.New("fastdfs.config_file_path does not exsit!");
-	}
+		panic("fastdfs.configPath does not exsit!")	}
 	//fastdfsPath:=config.Get("fastdfs.config_file_path").(string)
 	fmt.Printf("%-20s%-20s\n", "fastdfs.config_file_path:", fastPath)
 	c, err := fdfs_client.NewFdfsClient(fastPath)

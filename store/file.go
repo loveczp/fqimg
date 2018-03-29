@@ -59,9 +59,9 @@ func (fileStorage FileStore) Put(src io.Reader) (string, error) {
 		destFileWriter.Close()
 		return md5value, nil
 
-	} else {
-		return md5value, nil
 	}
+	return md5value, nil
+	
 }
 
 func (file FileStore) Get(md5 string) (io.Reader, error) {
