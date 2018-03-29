@@ -10,6 +10,7 @@
 <li>支持多种输出格式和输出质量。当前能够支持jpeg，gif，png，bmp，webp格式，对于jpeg，gif，webp还能够支持自定义输出图片质量。</li>
 <li>支持本地文件缓存，极大提高性能。</li>
 <li>支持上传控制，确保只有可信IP才能上传。</li>
+<li>支持跨域上传。</li>
 <li>支持三种存储后端，本地文件，<a href="http://image.fanqiangti.net/get/b59fe5a3cd71bc28e39e444cd955fcb1?c=fit&w=200&h=300|c=grayscale">fastdfs</a>，<a href="https://github.com/chrislusf/seaweedfs">seaweeddfs</a></li>
 </ol>
 
@@ -57,7 +58,9 @@ fqimg -c=path/to/config/file
 </p>
 
 <h2>2.图片上传</h2>
-curl  --data-binary @test.jpg "http://image.fanqiangti.net/put"
+curl -F "file=@xxxxx.jpg" "http://fanqiangti.net/put"
+把xxxx.jpg和fanqiangti.net换成你对应的信息
+
 其中test.jpg是需要上传的文件，这个对应于http中的binary的post上传，windows平台下可以用postman来模拟。
 可以得到如下结果。
 <br><br>
@@ -71,13 +74,12 @@ http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27
 <h2>3.图片操作</h2>
 <ul>
 <li>每一个图片操作就是一个处理命令，命令有0个或者多个参数，参数包含参数名和参数值。参数是以url的参数的方式放在url尾部。即？后面就是参数。
-命令名称用c表示，命令的值在下面的表中找。
 例如
 http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fit=200_300
-上面的命令表示对图片进行压缩，使图片能够容纳在一个200*300的框内。命令本身参数名是c，值是fit。fit命令包含两个参数h，w分别表示高和宽。
+上面的命令表示对图片进行fit压缩，使图片能够容纳在一个200*300的框内。命令是fit。对应的参数是高和宽。
 </li>
 <li>
-命令之间可以通过管道链接符号“|”把多个命令连接起来实现多重操作。
+命令之间可以通过连接符号“&”把多个命令连接起来实现多重操作。
 例如
 <a href="http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fit=200_300&grayscale">http://image.fanqiangti.net/get/2830dfa89daaf37b13c3421b7807df27?fit=200_300&grayscale</a>
 上面表示先推图像进行fit压缩操作，然后对操作后的结果进行灰度化 处理。
