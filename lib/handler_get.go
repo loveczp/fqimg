@@ -5,11 +5,9 @@ import (
 	"strings"
 	"net/http"
 	"image"
-	"io"
 	"github.com/deckarep/golang-set"
 	"github.com/loveczp/fqimg/store"
 	"net/url"
-	"strconv"
 )
 
 var (
