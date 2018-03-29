@@ -69,7 +69,7 @@ md5就是文件对应的MD5码，系统也是用这个来定位上传的文件�
 http://fqimg.com/get/2830dfa89daaf37b13c3421b7807df27
 
 <p>
-这里有个极其简单的测试页面<a href="http://fqimg.com/web">fqimg.com/web 去往测试页面玩耍</a>
+这里有个极其简单的测试页面<a href="http://fqimg.com/web/">fqimg.com/web 去往测试页面玩耍</a>
 </p>
 
 <h2>3.图片操作</h2>
