@@ -57,7 +57,9 @@ fqimg -c=path/to/config/file
 </p>
 
 <h2>2.图片上传</h2>
-curl  --data-binary @test.jpg "http://image.fanqiangti.net/put"
+curl -F "file=@xxxxx.jpg" "http://fanqiangti.net/put"
+把xxxx.jpg和fanqiangti.net换成你对应的信息
+
 其中test.jpg是需要上传的文件，这个对应于http中的binary的post上传，windows平台下可以用postman来模拟。
 可以得到如下结果。
 <br><br>
