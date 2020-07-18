@@ -1,18 +1,18 @@
 package lib
 
 import (
-	"io"
-	"net/http"
-	"log"
 	"encoding/json"
-	"github.com/loveczp/fqimg/store"
+	"fqimg/store"
 	"github.com/pkg/errors"
+	"io"
+	"log"
+	"net/http"
 	"strconv"
 )
 
 func UploadHandler(store store.Storage) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
-		err := req.ParseMultipartForm(1024);
+		err := req.ParseMultipartForm(1024)
 		if err != nil {
 			WriteErr(res, http.StatusInternalServerError, err)
 			return
@@ -25,32 +25,30 @@ func UploadHandler(store store.Storage) http.HandlerFunc {
 			return
 		}
 
-		if len(files)>Conf.UploadFileNmuLimit{
+		if len(files) > Conf.UploadFileNmuLimit {
 			WriteErr(res, http.StatusBadRequest, errors.New("number of uploaded file exceed the limit :"+strconv.Itoa(Conf.UploadFileNmuLimit)))
 			return
 		}
 
-		for _,f := range files {
-			if f.Size > int64(Conf.UploadFileSizeLimit*1024){
+		for _, f := range files {
+			if f.Size > int64(Conf.UploadFileSizeLimit*1024) {
 				WriteErr(res, http.StatusBadRequest, errors.New("size of uploaded file exceed the limit :"+strconv.Itoa(Conf.UploadFileSizeLimit)+"kb"))
 				return
 			}
 		}
 
-
 		var md5List []string
-		for _,f := range files {
-			tfile, _ := f.Open();
+		for _, f := range files {
+			tfile, _ := f.Open()
 			key, err := store.Put(tfile)
 			if err != nil {
 				res.WriteHeader(http.StatusInternalServerError)
 				log.Fatalln("error ocurr when store to file", err)
 			}
-			md5List = append(md5List, Conf.ImageUrlPrefix+ getAlias+"/"+key);
+			md5List = append(md5List, Conf.ImageUrlPrefix+getAlias+"/"+key)
 		}
 
-
-		restring, _ := json.Marshal(md5List);
+		restring, _ := json.Marshal(md5List)
 		res.Header().Add("Content-Type", "application/json")
 		io.WriteString(res, string(restring))
 	}

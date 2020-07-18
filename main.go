@@ -1,13 +1,13 @@
 package main
 
 import (
-	"net/http"
-	"strconv"
-	"log"
-	"github.com/loveczp/fqimg/lib"
+	"fqimg/lib"
+	"fqimg/plugin"
 	"github.com/gorilla/mux"
-	"github.com/loveczp/fqimg/plugin"
+	"log"
+	"net/http"
 	"os"
+	"strconv"
 )
 
 func main() {
@@ -27,7 +27,6 @@ func main() {
 	get = plugin.Plugin_get_headers(get)
 	get = plugin.Plugin_get_filecache(get)
 	route.PathPrefix("/get").HandlerFunc(get)
-
 
 	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(lib.Conf.HttpPort), route))
 }

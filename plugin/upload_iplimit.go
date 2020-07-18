@@ -1,13 +1,13 @@
 package plugin
 
 import (
-	"net/http"
-	"strings"
-	"net"
-	"github.com/loveczp/fqimg/lib"
+	"fqimg/lib"
 	"io"
 	"log"
+	"net"
+	"net/http"
 	"strconv"
+	"strings"
 )
 
 var (
@@ -24,7 +24,7 @@ func Plugin_upload_iplimit(h http.HandlerFunc) http.HandlerFunc {
 		if len(uploadAllowedIps) > 0 || len(uploadDenyIps) > 0 {
 			if ipPass(request) == false {
 				writer.WriteHeader(http.StatusInternalServerError)
-				io.WriteString(writer, "your ip address is forbiden to upload");
+				io.WriteString(writer, "your ip address is forbiden to upload")
 				return
 			}
 		} else {
@@ -84,18 +84,18 @@ func ipPass(req *http.Request) bool {
 				ipnet := uploadAllowedIps[i].(net.IPNet)
 				if ipnet.Contains(ip) {
 					//log.Println(ip.String()," match allow: ",ipnet.String())
-					return true;
+					return true
 				}
 			case net.IP:
 				thisip := uploadAllowedIps[i].(net.IP)
 				if thisip.Equal(ip) {
 					//log.Println(ip.String()," match allow: ",thisip.String())
-					return true;
+					return true
 				}
 			}
 		}
 		//log.Println(ip.String()," miss all allow: ",conf.UploadAllowedInterface)
-		return false;
+		return false
 	}
 
 	if len(uploadDenyIps) > 0 {
@@ -105,41 +105,41 @@ func ipPass(req *http.Request) bool {
 				ipnet := uploadDenyIps[i].(net.IPNet)
 				if ipnet.Contains(ip) {
 					//log.Println(ip.String()," match deny: ",ipnet.String())
-					return false;
+					return false
 				}
 			case net.IP:
 				thisip := uploadDenyIps[i].(net.IP)
 				if thisip.Equal(ip) {
 					//log.Println(ip.String()," match deny: ",thisip.String())
-					return false;
+					return false
 				}
 			}
 		}
 		//log.Println(ip.String()," miss all deny: ",conf.UploadDenyInterface)
-		return true;
+		return true
 	}
 
 	//log.Println(ip.String()," miss all ip filter")
-	return true;
+	return true
 }
 
 func parseIp(ips []string) []interface{} {
-	re := make([]interface{}, len(ips));
+	re := make([]interface{}, len(ips))
 	for i := 0; i < len(ips); i++ {
 		if strings.Contains(ips[i], "/") {
-			parts := strings.Split(ips[i], "/");
-			netipTemp := parts[0];
-			masklenStrTemp := parts[1];
-			netip := net.ParseIP(netipTemp);
-			maskLenTemp, err1 := strconv.Atoi(masklenStrTemp);
+			parts := strings.Split(ips[i], "/")
+			netipTemp := parts[0]
+			masklenStrTemp := parts[1]
+			netip := net.ParseIP(netipTemp)
+			maskLenTemp, err1 := strconv.Atoi(masklenStrTemp)
 			if err1 != nil {
-				log.Fatalln(err1);
-				return nil;
+				log.Fatalln(err1)
+				return nil
 			}
 			mask := net.CIDRMask(maskLenTemp, 32)
 			re[i] = net.IPNet{netip, mask}
 		} else {
-			re[i] = net.ParseIP(ips[i]);
+			re[i] = net.ParseIP(ips[i])
 		}
 	}
 	return re

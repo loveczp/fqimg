@@ -1,9 +1,9 @@
 package plugin
 
 import (
-	"net/http"
-	"github.com/loveczp/fqimg/lib"
+	"fqimg/lib"
 	"io"
+	"net/http"
 )
 
 func Plugin_upload_cors(h http.HandlerFunc) http.HandlerFunc {
@@ -21,7 +21,7 @@ func Plugin_upload_cors(h http.HandlerFunc) http.HandlerFunc {
 
 			if request.Method == http.MethodOptions {
 				writer.WriteHeader(http.StatusOK)
-				io.WriteString(writer, "");
+				io.WriteString(writer, "")
 				return
 			}
 		}

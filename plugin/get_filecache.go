@@ -1,19 +1,19 @@
 package plugin
 
 import (
-	"net/http"
-	"github.com/hashicorp/golang-lru"
-	"log"
-	"os"
-	"io"
 	"encoding/base64"
-	"github.com/loveczp/fqimg/lib"
+	"fqimg/lib"
+	"github.com/hashicorp/golang-lru"
+	"io"
+	"log"
+	"net/http"
+	"os"
 )
 
 func Plugin_get_filecache(h http.HandlerFunc) http.HandlerFunc {
 	var fileCache *(lru.Cache)
 	if fileCache == nil {
-		var err error;
+		var err error
 		fileCache, err = lru.NewWithEvict(lib.Conf.FileCacheSize, removeFile)
 		if err != nil {
 			log.Panic("cache create error :", err)
@@ -21,7 +21,7 @@ func Plugin_get_filecache(h http.HandlerFunc) http.HandlerFunc {
 	}
 
 	if lib.Conf.FileCacheDir != "" {
-		os.MkdirAll(lib.Conf.FileCacheDir, 0777);
+		os.MkdirAll(lib.Conf.FileCacheDir, 0777)
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -29,20 +29,20 @@ func Plugin_get_filecache(h http.HandlerFunc) http.HandlerFunc {
 			if item, ok := (*fileCache).Get(r.URL.String()); ok {
 				citem := item.(imageCacheItem)
 				if cfile, err := os.Open(citem.filePath); err == nil {
-					io.Copy(w, cfile);
-					log.Println("data from file cache:", r.URL.String());
+					io.Copy(w, cfile)
+					log.Println("data from file cache:", r.URL.String())
 					defer cfile.Close()
-					return;
+					return
 				} else {
 					(*fileCache).Remove(r.URL.String())
-					log.Println("data error from file cache:", r.URL.String());
+					log.Println("data error from file cache:", r.URL.String())
 					h.ServeHTTP(w, r)
 				}
 			} else {
-				cPath := lib.Conf.FileCacheDir + base64.StdEncoding.EncodeToString([]byte(r.URL.String()));
+				cPath := lib.Conf.FileCacheDir + base64.StdEncoding.EncodeToString([]byte(r.URL.String()))
 				var tempFile *(os.File)
 				if _, err := os.Stat(cPath); !os.IsExist(err) {
-					tempFile, err = os.Create(cPath);
+					tempFile, err = os.Create(cPath)
 					defer (*tempFile).Close()
 				}
 				log.Println("cache set data , key ", r.URL.String())
@@ -93,7 +93,7 @@ type imageCacheItem struct {
 
 func removeFile(key interface{}, value interface{}) {
 	citem := value.(imageCacheItem)
-	log.Println("romve cache item :", citem.key);
+	log.Println("romve cache item :", citem.key)
 	go func(filePath string) {
 		if _, err := os.Stat(filePath); err == nil {
 			err := os.Remove(filePath)
@@ -101,7 +101,7 @@ func removeFile(key interface{}, value interface{}) {
 				log.Panic("remove cache item error:", err.Error())
 			}
 		} else {
-			log.Println("romve cache item ,file to be removed is not exsit :", filePath);
+			log.Println("romve cache item ,file to be removed is not exsit :", filePath)
 		}
 
 	}(citem.filePath)

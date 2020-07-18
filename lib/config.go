@@ -1,14 +1,14 @@
 package lib
 
 import (
-	"log"
-	"image"
 	"flag"
 	"fmt"
-	"os"
-	"github.com/disintegration/imaging"
+	"fqimg/store"
 	"github.com/BurntSushi/toml"
-	"github.com/loveczp/fqimg/store"
+	"github.com/disintegration/imaging"
+	"image"
+	"log"
+	"os"
 )
 
 var (
@@ -72,15 +72,12 @@ func InitConfig() {
 		fmt.Printf(sformat, "fastdfs_config_file_path:", Conf.FastdfsConfigFilePath)
 	}
 
-	if (Conf.StorageType == "file") {
-		Storage_instance = store.InitFile(Conf.FileDir);
+	if Conf.StorageType == "file" {
+		Storage_instance = store.InitFile(Conf.FileDir)
 		fmt.Printf("-------------::::::::::use file as storage ::::::::--------------\n")
-	} else if (Conf.StorageType == "weed") {
+	} else if Conf.StorageType == "weed" {
 		Storage_instance, _ = store.InitWeed(Conf.WeedMasterUrl)
 		fmt.Printf("-------------::::::::::use weed as storage ::::::::--------------")
-	} else if (Conf.StorageType == "fastdfs") {
-		Storage_instance, _ = store.InitFast(Conf.FastdfsConfigFilePath)
-		fmt.Printf("-------------::::::::::use fastdfs as storage ::::::::--------------")
 	} else {
 		log.Panic("storage config not found")
 	}
@@ -102,7 +99,7 @@ func InitConfig() {
 
 	if len(Conf.Markers) > 0 {
 		fmt.Printf(sformat, "Markers:", Conf.Markers)
-		if (len(Conf.Markers) > 0) {
+		if len(Conf.Markers) > 0 {
 			for k, v := range Conf.Markers {
 				mreader, error := os.Open(v)
 				if error != nil {

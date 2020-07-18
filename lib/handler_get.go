@@ -1,13 +1,13 @@
 package lib
 
 import (
-	"github.com/disintegration/imaging"
-	"strings"
-	"net/http"
-	"image"
+	"fqimg/store"
 	"github.com/deckarep/golang-set"
-	"github.com/loveczp/fqimg/store"
+	"github.com/disintegration/imaging"
+	"image"
+	"net/http"
 	"net/url"
+	"strings"
 )
 
 var (
@@ -31,7 +31,7 @@ var (
 		"flipV":      cmd_flipV,
 		"transpose":  cmd_transpose,
 		"mark":       cmd_mark}
-	format_map = map[string]func(resp http.ResponseWriter, req *http.Request, img image.Image, para []string) (error){
+	format_map = map[string]func(resp http.ResponseWriter, req *http.Request, img image.Image, para []string) error{
 		"jpeg": format_jpeg,
 		"png":  format_png,
 		"gif":  format_gif,
@@ -54,7 +54,7 @@ func GetHandler(store store.Storage) http.HandlerFunc {
 		key := req.URL.Path[1:]
 		key = strings.TrimPrefix(key, "get/")
 		var outImage image.Image
-		reader, err := store.Get(key);
+		reader, err := store.Get(key)
 		if err != nil {
 			WriteErr(resp, http.StatusBadRequest, err)
 			return
@@ -69,8 +69,8 @@ func GetHandler(store store.Storage) http.HandlerFunc {
 			WriteErr(resp, http.StatusBadRequest, err)
 		}
 
-		for _, value := range (ops) {
-			outImage, err = cmd_map[value[0]](value, outImage);
+		for _, value := range ops {
+			outImage, err = cmd_map[value[0]](value, outImage)
 			if err != nil {
 				WriteErr(resp, http.StatusBadRequest, err)
 				return
@@ -95,12 +95,12 @@ func getCommands(req *http.Request) ([][]string, []string, error) {
 
 	re_cmds := [][]string{}
 	re_format := []string{}
-	for _, value := range (querry_arr) {
+	for _, value := range querry_arr {
 		cmd := []string{}
 		cmd = append(cmd, value[0])
 		if len(value) > 1 {
 			paraString := strings.TrimSpace(value[1])
-			if (len(paraString) < 1) {
+			if len(paraString) < 1 {
 				break
 			}
 			values := strings.Split(paraString, "_")

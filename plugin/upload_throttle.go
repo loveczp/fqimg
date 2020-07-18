@@ -1,13 +1,13 @@
 package plugin
 
 import (
-	"time"
-	"github.com/didip/tollbooth/limiter"
+	"fqimg/lib"
 	"github.com/didip/tollbooth"
-	"net/http"
-	"github.com/loveczp/fqimg/lib"
+	"github.com/didip/tollbooth/limiter"
 	"github.com/pkg/errors"
+	"net/http"
 	"strconv"
+	"time"
 )
 
 func Plugin_throttle_total(h http.HandlerFunc) http.HandlerFunc {
@@ -31,8 +31,8 @@ func Plugin_throttle_ip(h http.HandlerFunc) http.HandlerFunc {
 	IP_limit = tollbooth.NewLimiter(float64(lib.Conf.UploadThrottlePerIp), &limiter.ExpirableOptions{DefaultExpirationTTL: time.Hour})
 	IP_limit.SetIPLookups([]string{"RemoteAddr", "X-Forwarded-For", "X-Real-IP"}).
 		SetOnLimitReached(func(w http.ResponseWriter, r *http.Request) {
-		lib.WriteErr(w, http.StatusBadRequest, errors.New("upload rate is tow high, exceed the ip limit  "+strconv.Itoa(lib.Conf.UploadThrottlePerIp)+" upload / second+IP"))
-	})
+			lib.WriteErr(w, http.StatusBadRequest, errors.New("upload rate is tow high, exceed the ip limit  "+strconv.Itoa(lib.Conf.UploadThrottlePerIp)+" upload / second+IP"))
+		})
 
 	return func(writer http.ResponseWriter, request *http.Request) {
 		if lib.Conf.UploadThrottlePerIp != 0 {

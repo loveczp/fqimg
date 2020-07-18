@@ -27,13 +27,6 @@ fileDir = "/var/fqimg/data"
 #weedMasterUrl="http://192.168.76.180:9333"
 
 
-#如果想使用fastdfs作为存储目标，解开这个部分的注释，同时给“seaweedfs”和“file”加上注释
-#fastdfs的存储后端已经在生产环境中使用
-#if choose fastdfs as storage target then uncomment this section
-#and  comment the "weed" and "file" section 
-#we have tested this in production  environment
-#storageType="fastdfs"
-#fastdfsConfigFilePath="D:\\work\\go_image_server\\main\\fastdfs.conf"
 
 httpPort=12345
 
@@ -89,7 +82,7 @@ Server="fqimg"
 
 #水印文件存放这里
 #water markers  put here
-[markers]
-a="D:\\app\\gopath\\src\\github.com\\loveczp\\fqimg\\mark.png"
+#[markers]
+#a="D:\\app\\gopath\\src\\github.com\\loveczp\\fqimg\\mark.png"
 #b="./markers/b.jpg"
 #c="./markers/c.jpg"
