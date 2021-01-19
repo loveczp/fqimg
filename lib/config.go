@@ -22,7 +22,7 @@ type Config struct {
 	StorageType           string
 	FileDir               string
 	WeedMasterUrl         string
-	FastdfsConfigFilePath string
+	// FastdfsConfigFilePath string
 	HttpPort              int
 	FaviconPath           string
 	DefaultAction         string
@@ -42,6 +42,9 @@ type Config struct {
 	GetForceAction        string
 	UploadThrottlePerIp   int
 	UploadThrottleTotal   int
+	HttpsPort 			  int
+	HttpsPublicKeyPath    string
+	HttpsPrivateKeyPath   string
 }
 
 var markHash = make(map[string]image.Image)
@@ -68,9 +71,9 @@ func InitConfig() {
 	if Conf.WeedMasterUrl != "" {
 		fmt.Printf(sformat, "weed_master_url:", Conf.WeedMasterUrl)
 	}
-	if Conf.FastdfsConfigFilePath != "" {
-		fmt.Printf(sformat, "fastdfs_config_file_path:", Conf.FastdfsConfigFilePath)
-	}
+	// if Conf.FastdfsConfigFilePath != "" {
+	// 	fmt.Printf(sformat, "fastdfs_config_file_path:", Conf.FastdfsConfigFilePath)
+	// }
 
 	if Conf.StorageType == "file" {
 		Storage_instance = store.InitFile(Conf.FileDir)
@@ -82,10 +85,7 @@ func InitConfig() {
 		log.Panic("storage config not found")
 	}
 
-	fmt.Printf("%-30s%-20d\n", "port:", Conf.HttpPort)
-	if Conf.HttpPort == 0 {
-		Conf.HttpPort = 80
-	}
+
 	//fmt.Printf(sformat, "favicon_path:", Conf.FaviconPath)
 	if Conf.DefaultAction != "" {
 		fmt.Printf(sformat, "default_action:", Conf.DefaultAction)
@@ -165,5 +165,21 @@ func InitConfig() {
 
 	if Conf.UploadThrottleTotal != 0 {
 		fmt.Printf(dformat, "UploadThrottleTotal:", Conf.GetForceAction)
+	}
+
+	fmt.Printf("%-30s%-20d\n", "httpsPort:", Conf.HttpsPort)
+	if Conf.HttpsPort !=0{
+		if Conf.HttpsPrivateKeyPath==""{
+			log.Panic("when httpsPort is set, httpsPrivateKeyPath value should not be blanket.")
+		}
+		if Conf.HttpsPublicKeyPath==""{
+			log.Panic("when httpsPort is set, httpsPublicKeyPath value should not be blanket.")
+		}
+		fmt.Printf("%-30s%-20s\n", "httpsPrivateKeyPath:", Conf.HttpsPrivateKeyPath)
+		fmt.Printf("%-30s%-20s\n", "httpsPublicKeyPath:", Conf.HttpsPublicKeyPath)
+	}
+	fmt.Printf("%-30s%-20d\n", "httpPort:", Conf.HttpPort)
+	if Conf.HttpsPort ==0 && Conf.HttpPort ==0{
+		log.Panic("At least one of following value should be set, httpPort or httpsPort ")
 	}
 }
