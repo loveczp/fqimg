@@ -1,0 +1,10 @@
+#####
+POST http://localhost:12345/put
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="1.png"
+Content-Type: image/png
+
+< ./photo-test.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--

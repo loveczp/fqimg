@@ -1,16 +1,16 @@
 #currently, i just support the file,fastdfs,seaweedfs  as the storage target 
 #if any one want the image server to adapt other storage target 
 #please pull request
-#当前，只支持“文件”，“fastdfs”，“seaweedfs”作为存储目标
+#当前，只支持"文件"，"seaweedfs"作为存储目标
 #如果需要支持其他的存储目标，请联系我
 
 
 
 
 #if choose local file system as storage target then uncomment this section
-#and  comment the "fastdfs" and "weed" section 
+#and  comment the  "seaweedfs" section 
 #caution：this will limit the storage size to a few TB which is the maxmal size of one server.  but it is suffient to most of website
-#如果只想使用本地文件作为存储目标，解开这个部分的注释，同时给“fastdfs”和“weed”加上注释
+#如果只想使用本地文件作为存储目标，解开这个部分的注释，同时给"seaweedfs"加上注释
 #注意，这种配置下，只能使用单台服务器的存储能力，一般是TB以内，但对于绝大多数网站而言，这已经足够
 storageType = "file"
 #be careful the last char should not be "/" or it will occure error on linux
@@ -19,21 +19,21 @@ fileDir = "/var/fqimg/data"
 
 
 
-#如果想使用seaweedfs作为存储目标，解开这个部分的注释，同时给“fastdfs”和“file”加上注释
+#如果想使用seaweedfs作为存储目标，解开这个部分的注释，同时给"file"加上注释
 #if choose seaweedfs as storage target then uncomment this section
-#and  comment the "fastdfs" and "file" section 
+#and  comment the  "file" section 
 
-#storageType="weed"
+#storageType="seaweedfs"
 #weedMasterUrl="http://192.168.76.180:9333"
 
 
 
-httpPort=12345
+httpPort=80
 
-#if this value set https vill be open
-#httpsPort=10443
-#httpsPublicKeyPath=/abc/123
-#httpsPrivateKeyPath=/abc/456
+#if this value set https will be open
+httpsPort=443
+httpsPublicKeyPath="/root/.acme.sh/fqimg.com/fqimg.com.cer"
+httpsPrivateKeyPath="/root/.acme.sh/fqimg.com/fqimg.com.key"
 
 
 #custom favorite icon
@@ -67,10 +67,10 @@ getForceAction="mark=a"
 #uploadIpDeny=["127.0.0.1","192.168.76.200"]
 #uploadIpLookups=["RemoteAddr", "X-Forwarded-For", "X-Real-IP"]
 corsAllow=true
-imageUrlPrefix="http://127.0.0.1:12345/"
+imageUrlPrefix="http://fqimg.com/"
 uploadKey="file"
 #每个文件的大小限制，kb为单位
-uploadFileSizeLimit=2048
+uploadFileSizeLimit=10240
 #每次上传的文件数量限制，最大值为该值
 uploadFileNmuLimit=1
 #custom http headers  put here
@@ -82,7 +82,7 @@ Server="fqimg"
 
 #水印文件存放这里
 #water markers  put here
-#[markers]
-#a="D:\\app\\gopath\\src\\github.com\\loveczp\\fqimg\\mark.png"
-#b="./markers/b.jpg"
-#c="./markers/c.jpg"
+[markers]
+a="./mark.png"
+# b="./markers/b.jpg"
+# c="./markers/c.jpg"
