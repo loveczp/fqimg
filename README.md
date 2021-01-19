@@ -1,7 +1,7 @@
 <h1>FQimg</h1>
 <p>
 <h1 style="">先来体验一下把<br>
-<a href="http://fqimg.com/web/">fqimg.com/web/</a></h1>
+<a href="http://loveczp.github.io/fqimg/">loveczp.github.io/fqimg/</a></h1>
 </p>
 <br><br><br>
 这是一个用go语言写的实时图片服务器
