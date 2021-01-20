@@ -108,28 +108,28 @@ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300
         <td>fit</td>
         <td> fit=width_height<br>fit=width_height_filter</td>
         <td>fit=100_300<br/>fit=100_300_box<br> fit模式裁剪</td>
-        <td> <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=150_150" /></td>
+        <td> <img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=150_150" /></td>
         <td></td>
     </tr>
     <tr>
         <td>fill</td>
         <td>fill=width_height<br>fill=width_height_filter<br>fill=width_height_filter_anchor</td>
         <td>fill=100_300<br/>fill=100_300_box<br/>fill=100_300_box_top<br>fill模式裁剪</td>
-        <td><img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150" /></td>
+        <td><img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150" /></td>
         <td></td>
     </tr>
     <tr>
         <td>resize</td>
         <td>resize=width_height<br>resize=width_height_filter</td>
         <td>resize=100_300<br/>resize=100_300_box<br>  resize模式裁剪</td>
-        <td> <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?resize=150_150" /></td>
+        <td> <img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?resize=150_150" /></td>
         <td></td>
     </tr>
     <tr>
         <td>gamma</td>
         <td>gamma<br>gamma=stength</td>
         <td>gamma<br>gamma=234</td>
-        <td><img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&gamma=10" /></td>
+        <td><img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&gamma=10" /></td>
         <td></td>
     </tr>
     <tr>
@@ -137,7 +137,7 @@ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300
         <td>contrast<br>contrast=stength</td>
         <td>contrast<br>contrast=20<br> 增加对比度</td>
         <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&contrast=120" /></td>
+            <img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&contrast=120" /></td>
         <td></td>
     </tr>
     <tr>
@@ -145,7 +145,7 @@ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300
         <td>brightness<br>brightness=stength</td>
         <td> brightness<br>brightness=0.5<br>增加亮度 </td>
         <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&brightness=38" /></td>
+            <img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&brightness=38" /></td>
         <td></td>
     </tr>
     <tr>
@@ -153,7 +153,7 @@ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300
         <td>grayscale</td>
         <td>grayscale<br>变成灰度图 </td>
         <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&grayscale" /></td>
+            <img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&grayscale" /></td>
         <td></td>
     </tr>
     <tr>
@@ -161,7 +161,7 @@ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300
         <td>invert</td>
         <td>invert<br>反相 </td>
         <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&invert" /></td>
+            <img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&invert" /></td>
         <td></td>
     </tr>
     <tr>
@@ -169,7 +169,7 @@ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300
         <td>blur<br>blur=stength</td>
         <td>blur<br>blur=3.5<br>模糊</td>
         <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&blur=3.5" /></td>
+            <img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&blur=3.5" /></td>
         <td></td>
     </tr>
     <tr>
@@ -177,7 +177,7 @@ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300
         <td>sharpen<br>sharpen=stength</td>
         <td>sharpen<br>sharpen=3.5<br>锐化</td>
         <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&sharpen=65" /></td>
+            <img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&sharpen=65" /></td>
         <td></td>
     </tr>
     <tr>
@@ -185,7 +185,7 @@ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300
         <td>rotate90</td>
         <td>rotate90 正向旋转90度 </td>
         <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&rotate90" /></td>
+            <img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&rotate90" /></td>
         <td></td>
     </tr>
     <tr>
@@ -193,7 +193,7 @@ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300
         <td>rotate180</td>
         <td>rotate180正向旋转180度</td>
         <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&rotate180" /></td>
+            <img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&rotate180" /></td>
         <td></td>
     </tr>
     <tr>
@@ -201,7 +201,7 @@ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300
         <td>rotate270</td>
         <td>rotate270正向旋转270度</td>
         <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&rotate270" /></td>
+            <img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&rotate270" /></td>
         <td></td>
     </tr>
     <tr>
@@ -209,7 +209,7 @@ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300
         <td>flipH</td>
         <td>flipH水平翻转</td>
         <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&flipH" /></td>
+            <img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&flipH" /></td>
         <td></td>
     </tr>
     <tr>
@@ -217,7 +217,7 @@ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300
         <td>flipV</td>
         <td>flipV水平翻转</td>
         <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&flipV" /></td>
+            <img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&flipV" /></td>
         <td></td>
     </tr>
     <tr>
@@ -225,7 +225,7 @@ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300
         <td>webp<br>webp=quality</td>
         <td> webp<br>webp=80<br/>用80%的质量输出成webp格式</td>
         <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&webp=80" /></td>
+            <img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&webp=80" /></td>
         <td></td>
     </tr>
     <tr>
@@ -233,7 +233,7 @@ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300
         <td>jpeg<br>jpeg=quality</td>
         <td>jpeg<br>jpeg=80<br/>用80%的质量输出成jpeg格式</td>
         <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&jpeg=80" /></td>
+            <img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&jpeg=80" /></td>
         <td></td>
     </tr>
     <tr>
@@ -241,7 +241,7 @@ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300
         <td>png</td>
         <td>png 输出成png格式</td>
         <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&png" /></td>
+            <img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&png" /></td>
         <td></td>
     </tr>
     <tr>
@@ -249,7 +249,7 @@ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300
         <td>gif<br>gif=num<br>num为颜色数量</td>
         <td>png<br>png=128<br> 输出成128色的gif格式</td>
         <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&gif=64" /></td>
+            <img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&gif=64" /></td>
         <td></td>
     </tr>
     <tr>
@@ -257,7 +257,7 @@ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300
         <td>mark=mid<br>mark=mid_offx_offy<br>mark=mid_offx_offy_offp<br>mark=mid_offx_offy_offp_alpha<br>加水印 mid为配置文件中mark部分左边的key</td>
         <td>mark=a<br>mark=a_10_10<br>mark=a_10_10_lu<br>mark=a_10_10_lu_255</td>
         <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_151&mark=a" /></td>
+            <img src="http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_151&mark=a" /></td>
         <td></td>
     </tr>
 </table>

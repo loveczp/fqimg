@@ -29,7 +29,7 @@ features:
  fill=400_400 command will dynamicly cut the image in to 400*400 image, the height and width can be dynamicly set at one's will.
  https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=400_400
 
-* **china mode example**  
+* **chain mode example**  
  fit=200_300&grayscale is two chained command, fit and grascale. the server would first cut the image by 200*300, and then grayscale the product of the first step. Surely we can chain more command.  
  https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300&grayscale
 
