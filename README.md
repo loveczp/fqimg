@@ -77,7 +77,7 @@ then run fqimg with following command
 
 | command name  |  command format | example  | result  |
 |---|---|---|---|
-|fit| fit=width_height<br>fit=width_height_filter|fit=100_300<br/>fit=100_300_box<br> fit mod cut| ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=150_150)|
+|fit| fit=width_height<br>fit=width_height_filter|fit=100_300<br/>fit=100_300_box<br> fit mod cut| ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=150_150&raw=true)|
 |fill|fill=width_height<br>fill=width_height_filter<br>fill=width_height_filter_anchor|fill=100_300<br/>fill=100_300_box<br/>fill=100_300_box_top<br>fill mod cut|![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150)|
 |resize|resize=width_height<br>resize=width_height_filter|resize=100_300<br/>resize=100_300_box<br>  resize mod cut| ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?resize=150_150)|
 |gamma|gamma<br>gamma=stength|gamma<br>gamma=234|![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&gamma=10)|
