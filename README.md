@@ -1,263 +1,99 @@
-<h1>FQimg</h1>
-<p>
-<h1 style="">先来体验一下把<br>
-<a href="http://loveczp.github.io/fqimg/">loveczp.github.io/fqimg/</a></h1>
-</p>
-<br><br><br>
-这是一个用go语言写的实时图片服务器
-有如下特性
-<ol>
-<li>动态处理图片。在请求的url上加上不同的尺寸参数就可以得到不同的尺寸的图片。</li>
-<li>链式图片处理。对一个图片进行多重处理，这和unix的pipeline很类似。</li>
-<li>高性能。得益于go语言的并发特性，此图片服务器的内存，cpu占用都很低，能同时处理的图片数量也很可观。</li>
-<li>webp图片格式支持。webp比之于jpeg，能更好的压缩图片的存储和传输体积，这点对移动应用尤为重要。</li>
-<li>部署简单，只有一个可执行文件，不依赖任何外部运行库，只需将可执行文件拷贝到服务器即可执行。</li>
-<li>支持多种输出格式和输出质量。当前能够支持jpeg，gif，png，bmp，webp格式，对于jpeg，gif，webp还能够支持自定义输出图片质量。</li>
-<li>支持本地文件缓存，极大提高性能。</li>
-<li>支持上传控制，确保只有可信IP才能上传。</li>
-<li>支持跨域上传。</li>
-<li>支持http 和 https</li>
-<li>支持三种存储后端，本地文件，<a href="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300&grayscale">fastdfs</a>，<a href="https://github.com/chrislusf/seaweedfs">seaweeddfs</a></li>
-</ol>
+# FQimg
+## fqimg playground
+http://loveczp.github.io/fqimg/  
 
-<h1>示例</h1>
-原图如下
-https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0
+[Chinese Version document](https://github.com/loveczp/fqimg/blob/master/README-cn.md)
 
-动态剪裁的例子
-动态剪裁成400*400的图如下，当然高宽值可以设置成我们需要的任意值
-https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=400_400
+FQimg is a image server powered by Golang  
+features:
 
-链式处理的例子
-可以把图片裁剪成400*400后，还可以进行灰度处理。如下
-<a href="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300&grayscale">https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300&grayscale</a>
-
-webp处理的例子。如下
-https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?webp=50
+* dynamicly process the images。The url of the image can accept commands and parameters, by which we can crop, fill, grayscale,etc the image in real time. 
+* chain mode。commands can be chained together like Unix pipe. 
+* high performance. Because of the excelence of Golang, the FQimg server has very low RAM and CPU consumption.
+* support webp webp image format. Webp  is better than jpeg, it has the lower size on the same image quality. For mobile application, it is very important.
+* simple to deploy. FQimg is an executalbe binary file, don't need to install any extra library. 
+* support multiple image format, such as jpeg, gif,bmp, webp. Also support the quality parameter for each format.
+* FQimg has cache mechanism, repeatly requested images are cached. This feature can tremendously increase the performance. 
+* support the uploading Ip control. Only designated IPs are allowed to upload image.
+* CORS upload support. This is important for web application.
+* support HTTPS
+* support two storage type. 1. local file system，2. [seaweeddfs](https://github.com/chrislusf/seaweedfs)
 
 
+## examples
 
-<h1>未来开发路线图</h1>
+* **original image**
+ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0
 
-<ol>
-<li><s>支持自定义输出格式和格式质量，比如输出jpg，png，gif。</s>(已完成)</li>
-<li><s>支持webp格式。webp格式压缩的图片尺寸更小。</s>(已完成)</li>
-<li><s>增加后端分布式存储。当前版本只支持本地文件系统存储，只能利用单台机器的存储能力。</s>(已完成)</li>
-<li><s>增加安全性。对于恶意攻击增加防御能力。</s>(已完成,请见配置文件中的上传控制)</li>
-<li><s>增加图片水印支持。</s>(已完成,参见配置文件)</li>
-<li>开发插件系统，使其更容已扩展</li>
-</ol>
+* **dynamic cut example**  
+ fill=400_400 command will dynamicly cut the image in to 400*400 image, the height and width can be dynamicly set at one's will.
+ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=400_400
 
+* **china mode example**  
+ fit=200_300&grayscale is two chained command, fit and grascale. the server would first cut the image by 200*300, and then grayscale the product of the first step. Surely we can chain more command.  
+ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300&grayscale
 
-<h1>文档。</h1>
-<h2>1.安装及运行</h2>
-<p>
-go get github.com/loveczp/fqimg<br/>
-注意，
-<ul>
-<li>在windows上务必安装<a href="http://tdm-gcc.tdragon.net/download">tdm-gcc</a>否则无法编译安装通过</li>
-<li>go 版本必须大于等于1.8</li>
-</ul>
-
-然后运行
-fqimg -c=path/to/config/file
-</p>
-
-<h2>2.图片上传</h2>
-curl -F "file=@xxxxx.jpg" "http://fqimg.com/put"
-把xxxx.jpg和fqimg.com换成你对应的信息可以得到如下结果。
-<br><br>
-["https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0"]
-<br><br>
-md5就是文件对应的MD5码，系统也是用这个来定位上传的文件。
-
-访问该文件方法如下
-https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0
-
-
-
-<h2>3.图片操作</h2>
-<ul>
-<li>每一个图片操作就是一个处理命令，命令有0个或者多个参数，参数包含参数名和参数值。参数是以url的参数的方式放在url尾部。即？后面就是参数。
-例如
-https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300
-上面的命令表示对图片进行fit压缩，使图片能够容纳在一个200*300的框内。命令是fit。对应的参数是高和宽。
-</li>
-<li>
-命令之间可以通过连接符号“&”把多个命令连接起来实现多重操作。
-例如
-<a href="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300&grayscale">https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300&grayscale</a>
-上面表示先推图像进行fit压缩操作，然后对操作后的结果进行灰度化 处理。
-</li>
-<ul>
-
-
-<h1>开发注意事项</h1>
-<ul>
-<li>因为需要支持webp，所以使用了github.com/chai2010/webp 这个webp库。在<bold>windows</blod>上需要mingw的支持，请下载</li>
-<li>go 版本必须大于等于1.8</li>
-<ul>
+* **output webp format**  
+ 50 is the quality parameter of webp command  
+ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?webp=50
 
 
 
 
-<h1>命令列表</h1>
 
-<table>
-    <tr>
-        <td>fit</td>
-        <td> fit=width_height<br>fit=width_height_filter</td>
-        <td>fit=100_300<br/>fit=100_300_box<br> fit模式裁剪</td>
-        <td> <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=150_150" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>fill</td>
-        <td>fill=width_height<br>fill=width_height_filter<br>fill=width_height_filter_anchor</td>
-        <td>fill=100_300<br/>fill=100_300_box<br/>fill=100_300_box_top<br>fill模式裁剪</td>
-        <td><img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>resize</td>
-        <td>resize=width_height<br>resize=width_height_filter</td>
-        <td>resize=100_300<br/>resize=100_300_box<br>  resize模式裁剪</td>
-        <td> <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?resize=150_150" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>gamma</td>
-        <td>gamma<br>gamma=stength</td>
-        <td>gamma<br>gamma=234</td>
-        <td><img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&gamma=10" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>contrast</td>
-        <td>contrast<br>contrast=stength</td>
-        <td>contrast<br>contrast=20<br> 增加对比度</td>
-        <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&contrast=120" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>brightness</td>
-        <td>brightness<br>brightness=stength</td>
-        <td> brightness<br>brightness=0.5<br>增加亮度 </td>
-        <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&brightness=38" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>grayscale</td>
-        <td>grayscale</td>
-        <td>grayscale<br>变成灰度图 </td>
-        <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&grayscale" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>invert</td>
-        <td>invert</td>
-        <td>invert<br>反相 </td>
-        <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&invert" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>blur</td>
-        <td>blur<br>blur=stength</td>
-        <td>blur<br>blur=3.5<br>模糊</td>
-        <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&blur=3.5" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>sharpen</td>
-        <td>sharpen<br>sharpen=stength</td>
-        <td>sharpen<br>sharpen=3.5<br>锐化</td>
-        <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&sharpen=65" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>rotate90</td>
-        <td>rotate90</td>
-        <td>rotate90 正向旋转90度 </td>
-        <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&rotate90" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>rotate180</td>
-        <td>rotate180</td>
-        <td>rotate180正向旋转180度</td>
-        <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&rotate180" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>rotate270</td>
-        <td>rotate270</td>
-        <td>rotate270正向旋转270度</td>
-        <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&rotate270" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>flipH</td>
-        <td>flipH</td>
-        <td>flipH水平翻转</td>
-        <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&flipH" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>flipV</td>
-        <td>flipV</td>
-        <td>flipV水平翻转</td>
-        <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&flipV" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>webp</td>
-        <td>webp<br>webp=quality</td>
-        <td> webp<br>webp=80<br/>用80%的质量输出成webp格式</td>
-        <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&webp=80" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>jpeg</td>
-        <td>jpeg<br>jpeg=quality</td>
-        <td>jpeg<br>jpeg=80<br/>用80%的质量输出成jpeg格式</td>
-        <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&jpeg=80" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>png</td>
-        <td>png</td>
-        <td>png 输出成png格式</td>
-        <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&png" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>gif</td>
-        <td>gif<br>gif=num<br>num为颜色数量</td>
-        <td>png<br>png=128<br> 输出成128色的gif格式</td>
-        <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&gif=64" /></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>mark</td>
-        <td>mark=mid<br>mark=mid_offx_offy<br>mark=mid_offx_offy_offp<br>mark=mid_offx_offy_offp_alpha<br>加水印 mid为配置文件中mark部分左边的key</td>
-        <td>mark=a<br>mark=a_10_10<br>mark=a_10_10_lu<br>mark=a_10_10_lu_255</td>
-        <td>
-            <img src="https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_151&mark=a" /></td>
-        <td></td>
-    </tr>
-</table>
+## Document
+
+
+* **install and run**  
+go get github.com/loveczp/fqimg  
+then run fqimg with following command  
+  ```bash
+  fqimg -c=path/to/config/file
+  ```
+    attention:
+    * on window, we should first install [tdm-gcc](http://tdm-gcc.tdragon.net/download), or FQimg    * can not be compiled. Because the webp library is a C library.
+    * go version should be greater than 1.8
+* **image upload**  
+ we can use the curl command to post a image to the server  
+  ```bash
+  curl -F "file=@xxxxx.jpg" "http://fqimg.com/put"  
+   ```
+   
+    change the xxx.jpg and fqimg.com according to your circumstance.  
+    ["https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0"]  
+    when local storage is used, the last part of the URL is the of MD5 value of the image，FQimg use this value to pinpoint the image in file system.
+ 
+    Then we can get our image through the returned URL  
+    https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0
+    
+* **image manipulation**  
+ Each manipulation of the image has an corresponding command. Each command has Zero or multiple parameters. the format of the command is ```cmd``` ,which has no paramter, or ```cmd=a_b_c``` , which has three parameters a,b,c. The command attach to the rear of the URL as the standard url parameter.   
+ Example:
+ https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300&grayscale  
+ The above URL has two cmd 1, ```fit=200_300``` 2,```grayscale``` two commands are connected by ```&``` symbol.
+
+
+## <b>command list</b>
+
+| command name  |  command format | example  | result  |
+|---|---|---|---|
+|fit| fit=width_height<br>fit=width_height_filter|fit=100_300<br/>fit=100_300_box<br> fit mod cut| ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=150_150)|
+|fill|fill=width_height<br>fill=width_height_filter<br>fill=width_height_filter_anchor|fill=100_300<br/>fill=100_300_box<br/>fill=100_300_box_top<br>fill mod cut|![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150)|
+|resize|resize=width_height<br>resize=width_height_filter|resize=100_300<br/>resize=100_300_box<br>  resize mod cut| ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?resize=150_150)|
+|gamma|gamma<br>gamma=stength|gamma<br>gamma=234|![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&gamma=10)|
+|contrast|contrast<br>contrast=stength|contrast<br>contrast=20<br> increase the contrast|    ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&contrast=120)|
+|brightness|brightness<br>brightness=stength| brightness<br>brightness=0.5<br>increase the brightness |    ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&brightness=38)|
+|grayscale|grayscale|grayscale<br>grayscale the image |    ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&grayscale)|
+|invert|invert|invert<br>invert the iamge |    ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&invert)|
+|blur|blur<br>blur=stength|blur<br>blur=3.5<br>blur the image|    ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&blur=3.5)|
+|sharpen|sharpen<br>sharpen=stength|sharpen<br>sharpen=3.5<br>sharpen the image|    ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&sharpen=65)|
+|rotate90|rotate90|rotate90<br> rotate 90 degree |    ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&rotate90)|
+|rotate180|rotate180|rotate180<br> rotate 180 degree |    ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&rotate180)|
+|rotate270|rotate270|rotate270<br> rotate 270 degree |    ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&rotate270)|
+|flipH|flipH|flipH <br> flip horizontally|    ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&flipH)|
+|flipV|flipV|flipV <br> flip vertically|    ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&flipV)|
+|webp|webp<br>webp=quality| webp<br>webp=80<br/>output webp format image with 80% quality|    ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&webp=80)|
+|jpeg|jpeg<br>jpeg=quality|jpeg<br>jpeg=80<br/>output jpeg format image with 80% quality|    ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&jpeg=80)|
+|png|png|png <br/>output png format|    ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&png)|
+|gif|gif<br>gif=num<br>num is number of color|png<br>png=128<br/>output png format with 128 color|    ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&gif=64)|
+|mark|mark=id<br>mark=id_offx_offy<br>mark=id_offx_offy_offp<br>mark=id_offx_offy_offp_alpha<br>water mark <br> id is the image key set in the config file|mark=a<br>mark=a_10_10<br>mark=a_10_10_lu<br>mark=a_10_10_lu_255|    ![](https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_151&mark=a)|
