@@ -3,12 +3,13 @@ package lib
 import (
 	"flag"
 	"fmt"
-	"fqimg/store"
-	"github.com/BurntSushi/toml"
-	"github.com/disintegration/imaging"
 	"image"
 	"log"
 	"os"
+
+	"github.com/BurntSushi/toml"
+	"github.com/disintegration/imaging"
+	"github.com/loveczp/fqimg/store"
 )
 
 var (
@@ -19,32 +20,32 @@ var (
 )
 
 type Config struct {
-	StorageType           string
-	FileDir               string
-	WeedMasterUrl         string
+	StorageType   string
+	FileDir       string
+	WeedMasterUrl string
 	// FastdfsConfigFilePath string
-	HttpPort              int
-	FaviconPath           string
-	DefaultAction         string
-	Headers               map[string]string
-	LogDir                string
-	Markers               map[string]string
-	UploadIpAllowed       []string
-	UploadIpDeny          []string
-	UploadIpLookups       []string
-	CorsAllow             bool
-	ImageUrlPrefix        string
-	UploadKey             string
-	UploadFileSizeLimit   int
-	UploadFileNmuLimit    int
-	FileCacheDir          string
-	FileCacheSize         int
-	GetForceAction        string
-	UploadThrottlePerIp   int
-	UploadThrottleTotal   int
-	HttpsPort 			  int
-	HttpsPublicKeyPath    string
-	HttpsPrivateKeyPath   string
+	HttpPort            int
+	FaviconPath         string
+	DefaultAction       string
+	Headers             map[string]string
+	LogDir              string
+	Markers             map[string]string
+	UploadIpAllowed     []string
+	UploadIpDeny        []string
+	UploadIpLookups     []string
+	CorsAllow           bool
+	ImageUrlPrefix      string
+	UploadKey           string
+	UploadFileSizeLimit int
+	UploadFileNmuLimit  int
+	FileCacheDir        string
+	FileCacheSize       int
+	GetForceAction      string
+	UploadThrottlePerIp int
+	UploadThrottleTotal int
+	HttpsPort           int
+	HttpsPublicKeyPath  string
+	HttpsPrivateKeyPath string
 }
 
 var markHash = make(map[string]image.Image)
@@ -84,7 +85,6 @@ func InitConfig() {
 	} else {
 		log.Panic("storage config not found")
 	}
-
 
 	//fmt.Printf(sformat, "favicon_path:", Conf.FaviconPath)
 	if Conf.DefaultAction != "" {
@@ -168,18 +168,18 @@ func InitConfig() {
 	}
 
 	fmt.Printf("%-30s%-20d\n", "httpsPort:", Conf.HttpsPort)
-	if Conf.HttpsPort !=0{
-		if Conf.HttpsPrivateKeyPath==""{
+	if Conf.HttpsPort != 0 {
+		if Conf.HttpsPrivateKeyPath == "" {
 			log.Panic("when httpsPort is set, httpsPrivateKeyPath value should not be blanket.")
 		}
-		if Conf.HttpsPublicKeyPath==""{
+		if Conf.HttpsPublicKeyPath == "" {
 			log.Panic("when httpsPort is set, httpsPublicKeyPath value should not be blanket.")
 		}
 		fmt.Printf("%-30s%-20s\n", "httpsPrivateKeyPath:", Conf.HttpsPrivateKeyPath)
 		fmt.Printf("%-30s%-20s\n", "httpsPublicKeyPath:", Conf.HttpsPublicKeyPath)
 	}
 	fmt.Printf("%-30s%-20d\n", "httpPort:", Conf.HttpPort)
-	if Conf.HttpsPort ==0 && Conf.HttpPort ==0{
+	if Conf.HttpsPort == 0 && Conf.HttpPort == 0 {
 		log.Panic("At least one of following value should be set, httpPort or httpsPort ")
 	}
 }

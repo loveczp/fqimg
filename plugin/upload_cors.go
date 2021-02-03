@@ -1,9 +1,10 @@
 package plugin
 
 import (
-	"fqimg/lib"
 	"io"
 	"net/http"
+
+	"github.com/loveczp/fqimg/lib"
 )
 
 func Plugin_upload_cors(h http.HandlerFunc) http.HandlerFunc {

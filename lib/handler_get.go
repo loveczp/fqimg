@@ -1,17 +1,18 @@
 package lib
 
 import (
-	"fqimg/store"
-	"github.com/deckarep/golang-set"
-	"github.com/disintegration/imaging"
 	"image"
 	"net/http"
 	"net/url"
 	"strings"
+
+	set "github.com/deckarep/golang-set"
+	"github.com/disintegration/imaging"
+	"github.com/loveczp/fqimg/store"
 )
 
 var (
-	cmds    mapset.Set
+	cmds    set.Set
 	cmd_map = map[string]func(para []string, in image.Image) (image.Image, error){
 		"fit":        cmd_fit,
 		"fill":       cmd_fill,
@@ -40,7 +41,7 @@ var (
 )
 
 func init() {
-	cmds = mapset.NewSet()
+	cmds = set.NewSet()
 	for key := range cmd_map {
 		cmds.Add(key)
 	}

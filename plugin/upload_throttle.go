@@ -1,13 +1,14 @@
 package plugin
 
 import (
-	"fqimg/lib"
-	"github.com/didip/tollbooth"
-	"github.com/didip/tollbooth/limiter"
-	"github.com/pkg/errors"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/didip/tollbooth"
+	"github.com/didip/tollbooth/limiter"
+	"github.com/loveczp/fqimg/lib"
+	"github.com/pkg/errors"
 )
 
 func Plugin_throttle_total(h http.HandlerFunc) http.HandlerFunc {

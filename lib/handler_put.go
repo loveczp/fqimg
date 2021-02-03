@@ -2,12 +2,13 @@ package lib
 
 import (
 	"encoding/json"
-	"fqimg/store"
-	"github.com/pkg/errors"
 	"io"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/loveczp/fqimg/store"
+	"github.com/pkg/errors"
 )
 
 func UploadHandler(store store.Storage) http.HandlerFunc {

@@ -1,13 +1,14 @@
 package plugin
 
 import (
-	"fqimg/lib"
 	"io"
 	"log"
 	"net"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/loveczp/fqimg/lib"
 )
 
 var (

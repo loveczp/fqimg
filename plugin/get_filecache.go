@@ -2,12 +2,13 @@ package plugin
 
 import (
 	"encoding/base64"
-	"fqimg/lib"
-	"github.com/hashicorp/golang-lru"
 	"io"
 	"log"
 	"net/http"
 	"os"
+
+	lru "github.com/hashicorp/golang-lru"
+	"github.com/loveczp/fqimg/lib"
 )
 
 func Plugin_get_filecache(h http.HandlerFunc) http.HandlerFunc {
