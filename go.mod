@@ -1,4 +1,4 @@
-module fqimg
+module github.com/loveczp/fqimg
 
 go 1.14
 
