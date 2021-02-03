@@ -50,7 +50,7 @@ then run fqimg with following command
   ```bash
   fqimg -c=path/to/config/file
   ```
-    attention:
+    **attention**:
     * on window, we should first install [tdm-gcc](http://tdm-gcc.tdragon.net/download), or FQimg  can not be compiled. Because the webp library is a C library.
     * go version should be greater than 1.8
 * **image upload**  
