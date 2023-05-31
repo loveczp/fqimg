@@ -23,19 +23,19 @@ features:
 ## examples
 
 * **original image**
- https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0
+ https://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87
 
 * **dynamic cut example**  
  fill=400_400 command will dynamicly cut the image in to 400*400 image, the height and width can be dynamicly set at one's will.
- https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=400_400
+ https://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=400_400
 
 * **chain mode example**  
  fit=200_300&grayscale is two chained command, fit and grascale. the server would first cut the image by 200*300, and then grayscale the product of the first step. Surely we can chain more command.  
- https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300&grayscale
+ https://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fit=200_300&grayscale
 
 * **output webp format**  
  50 is the quality parameter of webp command  
- https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?webp=50
+ https://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?webp=50
 
 
 
@@ -60,16 +60,16 @@ then run fqimg with following command
    ```
    
     change the xxx.jpg and fqimg.com according to your circumstance.  
-    ["https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0"]  
+    ["https://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87"]  
     when local storage is used, the last part of the URL is the of MD5 value of the image，FQimg use this value to pinpoint the image in file system.
  
     Then we can get our image through the returned URL  
-    https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0
+    https://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87
     
 * **image manipulation**  
  Each manipulation of the image has an corresponding command. Each command has Zero or multiple parameters. the format of the command is ```cmd``` ,which has no paramter, or ```cmd=a_b_c``` , which has three parameters a,b,c. The command attach to the rear of the URL as the standard url parameter.   
  Example:
- https://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=200_300&grayscale  
+ https://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fit=200_300&grayscale  
  The above URL has two cmd 1, ```fit=200_300``` 2,```grayscale``` two commands are connected by ```&``` symbol.
 
 
@@ -77,23 +77,23 @@ then run fqimg with following command
 
 | command name  |  command format | example  | result  |
 |---|---|---|---|
-|fit| fit=width_height<br>fit=width_height_filter|fit=100_300<br/>fit=100_300_box<br> fit mod cut| ![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fit=150_150)|
-|fill|fill=width_height<br>fill=width_height_filter<br>fill=width_height_filter_anchor|fill=100_300<br/>fill=100_300_box<br/>fill=100_300_box_top<br>fill mod cut|![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150)|
-|resize|resize=width_height<br>resize=width_height_filter|resize=100_300<br/>resize=100_300_box<br>  resize mod cut| ![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?resize=150_150)|
-|gamma|gamma<br>gamma=stength|gamma<br>gamma=234|![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&gamma=10)|
-|contrast|contrast<br>contrast=stength|contrast<br>contrast=20<br> increase the contrast|    ![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&contrast=120)|
-|brightness|brightness<br>brightness=stength| brightness<br>brightness=0.5<br>increase the brightness |    ![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&brightness=38)|
-|grayscale|grayscale|grayscale<br>grayscale the image |    ![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&grayscale)|
-|invert|invert|invert<br>invert the iamge |    ![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&invert)|
-|blur|blur<br>blur=stength|blur<br>blur=3.5<br>blur the image|    ![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&blur=3.5)|
-|sharpen|sharpen<br>sharpen=stength|sharpen<br>sharpen=3.5<br>sharpen the image|    ![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&sharpen=65)|
-|rotate90|rotate90|rotate90<br> rotate 90 degree |    ![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&rotate90)|
-|rotate180|rotate180|rotate180<br> rotate 180 degree |    ![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&rotate180)|
-|rotate270|rotate270|rotate270<br> rotate 270 degree |    ![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&rotate270)|
-|flipH|flipH|flipH <br> flip horizontally|    ![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&flipH)|
-|flipV|flipV|flipV <br> flip vertically|    ![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&flipV)|
-|webp|webp<br>webp=quality| webp<br>webp=80<br/>output webp format image with 80% quality|    ![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&webp=80)|
-|jpeg|jpeg<br>jpeg=quality|jpeg<br>jpeg=80<br/>output jpeg format image with 80% quality|    ![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&jpeg=80)|
-|png|png|png <br/>output png format|    ![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&png)|
-|gif|gif<br>gif=num<br>num is number of color|png<br>png=128<br/>output png format with 128 color|    ![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_150&gif=64)|
-|mark|mark=id<br>mark=id_offx_offy<br>mark=id_offx_offy_offp<br>mark=id_offx_offy_offp_alpha<br>water mark <br> id is the image key set in the config file|mark=a<br>mark=a_10_10<br>mark=a_10_10_lu<br>mark=a_10_10_lu_255|    ![](http://fqimg.com/get/0657cae447e8c88f44c65b7e5f73cfe0?fill=150_151&mark=a)|
+|fit| fit=width_height<br>fit=width_height_filter|fit=100_300<br/>fit=100_300_box<br> fit mod cut| ![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fit=150_150)|
+|fill|fill=width_height<br>fill=width_height_filter<br>fill=width_height_filter_anchor|fill=100_300<br/>fill=100_300_box<br/>fill=100_300_box_top<br>fill mod cut|![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=150_150)|
+|resize|resize=width_height<br>resize=width_height_filter|resize=100_300<br/>resize=100_300_box<br>  resize mod cut| ![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?resize=150_150)|
+|gamma|gamma<br>gamma=stength|gamma<br>gamma=234|![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=150_150&gamma=10)|
+|contrast|contrast<br>contrast=stength|contrast<br>contrast=20<br> increase the contrast|    ![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=150_150&contrast=120)|
+|brightness|brightness<br>brightness=stength| brightness<br>brightness=0.5<br>increase the brightness |    ![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=150_150&brightness=38)|
+|grayscale|grayscale|grayscale<br>grayscale the image |    ![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=150_150&grayscale)|
+|invert|invert|invert<br>invert the iamge |    ![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=150_150&invert)|
+|blur|blur<br>blur=stength|blur<br>blur=3.5<br>blur the image|    ![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=150_150&blur=3.5)|
+|sharpen|sharpen<br>sharpen=stength|sharpen<br>sharpen=3.5<br>sharpen the image|    ![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=150_150&sharpen=65)|
+|rotate90|rotate90|rotate90<br> rotate 90 degree |    ![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=150_150&rotate90)|
+|rotate180|rotate180|rotate180<br> rotate 180 degree |    ![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=150_150&rotate180)|
+|rotate270|rotate270|rotate270<br> rotate 270 degree |    ![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=150_150&rotate270)|
+|flipH|flipH|flipH <br> flip horizontally|    ![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=150_150&flipH)|
+|flipV|flipV|flipV <br> flip vertically|    ![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=150_150&flipV)|
+|webp|webp<br>webp=quality| webp<br>webp=80<br/>output webp format image with 80% quality|    ![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=150_150&webp=80)|
+|jpeg|jpeg<br>jpeg=quality|jpeg<br>jpeg=80<br/>output jpeg format image with 80% quality|    ![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=150_150&jpeg=80)|
+|png|png|png <br/>output png format|    ![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=150_150&png)|
+|gif|gif<br>gif=num<br>num is number of color|png<br>png=128<br/>output png format with 128 color|    ![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=150_150&gif=64)|
+|mark|mark=id<br>mark=id_offx_offy<br>mark=id_offx_offy_offp<br>mark=id_offx_offy_offp_alpha<br>water mark <br> id is the image key set in the config file|mark=a<br>mark=a_10_10<br>mark=a_10_10_lu<br>mark=a_10_10_lu_255|    ![](http://fqimg.com/get/0fd5e7521b8e91e207a7552fc3113e87?fill=150_151&mark=a)|
